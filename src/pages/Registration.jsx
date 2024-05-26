@@ -1,73 +1,46 @@
-// src/pages/registration.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { auth } from '../firebase';
 
 const Registration = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    name: '',
-    department: '',
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const { email, password } = event.target.elements;
+    auth.createUserWithEmailAndPassword(email.value, password.value);
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // フォームデータの処理
-    console.log('Form submitted:', formData);
+  const handleChangeEmail = (event) => {
+    setEmail(event.currentTarget.value);
+  };
+  const handleChangePassword = (event) => {
+    setPassword(event.currentTarget.value);
   };
 
   return (
     <div>
-      <h1>Registration Page</h1>
+      <h1>ユーザ登録</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email:</label>
+          <label>メールアドレス</label>
           <input
-            type="email"
             name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
+            type="email"
+            placeholder="email"
+            onChange={(event) => handleChangeEmail(event)}
           />
         </div>
         <div>
-          <label>Password:</label>
+          <label>パスワード</label>
           <input
-            type="password"
             name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
+            type="password"
+            placeholder="password"
+            onChange={(event) => handleChangePassword(event)}
           />
         </div>
         <div>
-          <label>Name:</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
+          <button>登録</button>
         </div>
-        <div>
-          <label>Department:</label>
-          <input
-            type="text"
-            name="department"
-            value={formData.department}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit">Register</button>
       </form>
     </div>
   );
