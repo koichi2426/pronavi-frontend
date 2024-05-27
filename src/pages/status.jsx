@@ -1,11 +1,19 @@
 // src/pages/status.jsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
+import { useAuthContext } from '../context/AuthContext';
 
 const Status = () => {
+  const { user } = useAuthContext();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      console.log('Logged in user:', user);
+    }
+  }, [user]);
 
   const handleLogout = async () => {
     try {
