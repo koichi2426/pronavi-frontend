@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import random
 
 app = Flask(__name__)
+CORS(app)  # CORSを有効にする
 
 # Generate random names for initial data
 first_names = ["John", "Jane", "Alice", "Bob", "Charlie", "Daisy", "Edward", "Fiona", "George", "Hannah"]
@@ -12,8 +14,10 @@ def generate_random_name():
 
 # 初期データ
 users = [
+    {"User_id": "eAxVXJic5qdIJdmAEugPHxuti502", "User_name": generate_random_name(), "Department_id": random.randint(1, 6), "Status_id": random.randint(1, 6)}
+] + [
     {"User_id": str(i), "User_name": generate_random_name(), "Department_id": random.randint(1, 6), "Status_id": random.randint(1, 6)}
-    for i in range(100)
+    for i in range(1, 100)
 ]
 
 @app.route('/register', methods=['POST'])
