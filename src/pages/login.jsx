@@ -36,35 +36,35 @@ const Login = () => {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>ログイン</h1>
+      <div style={styles.logo}>ProNavi</div>
       {error && <p style={styles.error}>{error}</p>}
       {!user && (
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.inputGroup}>
-            <label style={styles.label}>メールアドレス</label>
+            <label style={styles.label}>Email Address</label>
             <input
               name="email"
               type="email"
-              placeholder="メールアドレス"
+              placeholder="Email Address"
               value={email}
               onChange={(event) => setEmail(event.currentTarget.value)}
               style={styles.input}
             />
           </div>
           <div style={styles.inputGroup}>
-            <label style={styles.label}>パスワード</label>
+            <label style={styles.label}>Password</label>
             <input
               name="password"
               type="password"
-              placeholder="パスワード"
+              placeholder="Password"
               value={password}
               onChange={(event) => setPassword(event.currentTarget.value)}
-              style={styles.input}
+              style={styles.passwordInput}
             />
           </div>
           <div style={styles.buttonContainer}>
             <button type="submit" style={styles.button} disabled={loading}>
-              {loading ? <div style={styles.spinner}></div> : 'ログイン'}
+              {loading ? <div style={styles.spinner}></div> : 'Login'}
             </button>
           </div>
         </form>
@@ -83,11 +83,12 @@ const styles = {
     backgroundColor: '#f0f2f5',
     fontFamily: 'Arial, sans-serif',
   },
-  title: {
-    color: '#333',
-    marginBottom: '20px',
-    fontSize: '28px',
+  logo: {
+    fontSize: '36px',
     fontWeight: 'bold',
+    color: '#007bff',
+    marginBottom: '20px',
+    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)',
     textTransform: 'uppercase',
   },
   error: {
@@ -124,6 +125,16 @@ const styles = {
     padding: '12px',
     borderRadius: '5px',
     border: '1px solid #ccc',
+    fontSize: '16px',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    transition: 'border-color 0.3s, box-shadow 0.3s',
+  },
+  passwordInput: {
+    width: '100%',
+    maxWidth: '300px',
+    padding: '12px',
+    borderRadius: '5px',
+    border: '1px solid #007bff',
     fontSize: '16px',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
     transition: 'border-color 0.3s, box-shadow 0.3s',

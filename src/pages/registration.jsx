@@ -1,19 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 
 const Registration = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [department, setDepartment] = useState('');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    // Check if all fields are filled
+    if (email && password && confirmPassword && username && department) {
+      setIsFormValid(true);
+    } else {
+      setIsFormValid(false);
+    }
+  }, [email, password, confirmPassword, username, department]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      setMessage('ユーザーが正常に登録されました');
+      const departmentId = getDepartmentId(department);
+
+      // Send user information to API
+      await sendUserDataToAPI(user.uid, username, departmentId);
+
+      setMessage('User registered successfully');
       console.log('User registered:', user);
     } catch (error) {
       setError(error.message);
@@ -29,39 +51,207 @@ const Registration = () => {
     setPassword(event.currentTarget.value);
   };
 
+  const handleChangeConfirmPassword = (event) => {
+    setConfirmPassword(event.currentTarget.value);
+  };
+
+  const handleChangeUsername = (event) => {
+    setUsername(event.currentTarget.value);
+  };
+
+  const handleChangeDepartment = (event) => {
+    setDepartment(event.currentTarget.value);
+  };
+
+  const getDepartmentId = (department) => {
+    const departments = { RU: 1, RB: 2, RD: 3, RE: 4, RM: 5, RG: 6 };
+    return departments[department] || null;
+  };
+
+  const sendUserDataToAPI = async (userId, userName, departmentId) => {
+    try {
+      const response = await fetch('http://127.0.0.1:3001/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          User_id: userId,
+          User_name: userName,
+          Department_id: departmentId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('API response:', data);
+    } catch (error) {
+      console.error('Error sending user data to API:', error);
+      setError('Failed to send user data');
+    }
+  };
+
   return (
-    <div>
-      <h1>ユーザ登録</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {message && <p style={{ color: 'green' }}>{message}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>メールアドレス</label>
+    <div style={styles.container}>
+      <div style={styles.logo}>ProNavi</div>
+      <h1 style={styles.title}>User Registration</h1>
+      {error && <p style={styles.error}>{error}</p>}
+      {message && <p style={styles.message}>{message}</p>}
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <div style={styles.inputGroup}>
+          <label style={styles.label}>Email Address</label>
           <input
             name="email"
             type="email"
-            placeholder="email"
+            placeholder="Email"
             value={email}
             onChange={handleChangeEmail}
+            style={styles.input}
           />
         </div>
-        <div>
-          <label>パスワード</label>
+        <div style={styles.inputGroup}>
+          <label style={styles.label}>Password</label>
           <input
             name="password"
             type="password"
-            placeholder="password"
+            placeholder="Password"
             value={password}
             onChange={handleChangePassword}
+            style={styles.input}
           />
         </div>
-        <div>
-          <button type="submit">登録</button>
+        <div style={styles.inputGroup}>
+          <label style={styles.label}>Confirm Password</label>
+          <input
+            name="confirmPassword"
+            type="password"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={handleChangeConfirmPassword}
+            style={styles.input}
+          />
+        </div>
+        <div style={styles.inputGroup}>
+          <label style={styles.label}>Username</label>
+          <input
+            name="username"
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={handleChangeUsername}
+            style={styles.input}
+          />
+        </div>
+        <div style={styles.inputGroup}>
+          <label style={styles.label}>Department</label>
+          <select value={department} onChange={handleChangeDepartment} style={styles.input}>
+            <option value="">Select your department</option>
+            <option value="RU">RU</option>
+            <option value="RB">RB</option>
+            <option value="RD">RD</option>
+            <option value="RE">RE</option>
+            <option value="RM">RM</option>
+            <option value="RG">RG</option>
+          </select>
+        </div>
+        <div style={styles.buttonContainer}>
+          <button type="submit" style={{ ...styles.button, opacity: isFormValid ? 1 : 0.6, cursor: isFormValid ? 'pointer' : 'not-allowed' }} disabled={!isFormValid}>Register</button>
         </div>
       </form>
     </div>
   );
 };
 
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100vh',
+    backgroundColor: '#f0f2f5',
+    fontFamily: 'Arial, sans-serif',
+  },
+  logo: {
+    fontSize: '36px',
+    fontWeight: 'bold',
+    color: '#007bff',
+    marginBottom: '20px',
+    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)',
+    textTransform: 'uppercase',
+  },
+  title: {
+    color: '#333',
+    marginBottom: '20px',
+    fontSize: '28px',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+  },
+  error: {
+    color: 'red',
+    marginBottom: '15px',
+  },
+  message: {
+    color: 'green',
+    marginBottom: '15px',
+  },
+  form: {
+    width: '100%',
+    maxWidth: '400px',
+    backgroundColor: 'white',
+    padding: '30px',
+    borderRadius: '10px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+    transition: 'transform 0.3s, box-shadow 0.3s',
+  },
+  inputGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: '20px',
+    width: '100%',
+  },
+  label: {
+    display: 'block',
+    marginBottom: '8px',
+    color: '#555',
+    fontSize: '16px',
+    width: '100%',
+    textAlign: 'center',
+  },
+  input: {
+    width: '100%',
+    maxWidth: '300px',
+    padding: '12px',
+    borderRadius: '5px',
+    border: '1px solid #ccc',
+    fontSize: '16px',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    transition: 'border-color 0.3s, box-shadow 0.3s',
+  },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  button: {
+    backgroundColor: '#007bff',
+    color: 'white',
+    border: 'none',
+    padding: '12px 24px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s, transform 0.3s',
+    fontSize: '16px',
+    width: '100%',
+    maxWidth: '300px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+};
+
 export default Registration;
-//
