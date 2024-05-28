@@ -14,8 +14,10 @@ def generate_random_name():
 
 # 初期データ
 users = [
+    {"User_id": "eAxVXJic5qdIJdmAEugPHxuti502", "User_name": generate_random_name(), "Department_id": random.randint(1, 6), "Status_id": random.randint(1, 6)}
+] + [
     {"User_id": str(i), "User_name": generate_random_name(), "Department_id": random.randint(1, 6), "Status_id": random.randint(1, 6)}
-    for i in range(100)
+    for i in range(1, 100)
 ]
 
 @app.route('/register', methods=['POST'])
