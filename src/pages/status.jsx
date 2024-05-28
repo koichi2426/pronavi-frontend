@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
+=======
+import React, { useEffect } from 'react';
+>>>>>>> development
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
@@ -15,6 +19,7 @@ const Status = () => {
       navigate('/login');
     } else {
       console.log('Logged in user:', user);
+<<<<<<< HEAD
       fetchUserData(user.uid);
     }
   }, [user, navigate]);
@@ -37,6 +42,12 @@ const Status = () => {
       setUserStatus('none');
     }
   };
+=======
+    } else {
+      navigate('/login');
+    }
+  }, [user, navigate]);
+>>>>>>> development
 
   const handleLogout = async () => {
     try {
