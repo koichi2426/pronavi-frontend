@@ -10,6 +10,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -20,6 +21,7 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log('User signed in:', userCredential.user);
@@ -27,6 +29,8 @@ const Login = () => {
     } catch (error) {
       setError(error.message);
       console.error('Error signing in:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,7 +63,9 @@ const Login = () => {
             />
           </div>
           <div style={styles.buttonContainer}>
-            <button type="submit" style={styles.button}>ログイン</button>
+            <button type="submit" style={styles.button} disabled={loading}>
+              {loading ? <div style={styles.spinner}></div> : 'ログイン'}
+            </button>
           </div>
         </form>
       )}
@@ -138,10 +144,31 @@ const styles = {
     fontSize: '16px',
     width: '100%',
     maxWidth: '300px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  buttonHover: {
-    backgroundColor: '#0056b3',
+  spinner: {
+    border: '4px solid rgba(255, 255, 255, 0.3)',
+    borderRadius: '50%',
+    borderTop: '4px solid #ffffff',
+    width: '20px',
+    height: '20px',
+    animation: 'spin 1s linear infinite',
   },
 };
+
+const globalStyles = `
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+
+// Append the styles to the document head
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = globalStyles;
+document.head.appendChild(styleSheet);
 
 export default Login;
