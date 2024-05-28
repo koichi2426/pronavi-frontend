@@ -12,6 +12,10 @@ const Completion = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleRedirect = () => {
+    window.location.href = '/login';
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.messageContainer}>
@@ -19,9 +23,12 @@ const Completion = () => {
       </div>
       <div ref={downloadRef} style={styles.downloadSection}>
         <p style={styles.instruction}>こちらからこのサービスの使い方を説明したPDFをダウンロードできます:</p>
-        <a href="/path/to/guide.pdf" download style={styles.downloadButton}>
+        <a href="./../../pdf/guide.pdf" download style={styles.button}>
           PDFをダウンロード
         </a>
+        <button onClick={handleRedirect} style={styles.button}>
+          サービスに移動
+        </button>
       </div>
     </div>
   );
@@ -70,7 +77,7 @@ const styles = {
     marginBottom: '20px',
     textAlign: 'center',
   },
-  downloadButton: {
+  button: {
     backgroundColor: '#007bff',
     color: 'white',
     padding: '12px 24px',
@@ -80,6 +87,9 @@ const styles = {
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
     transition: 'background-color 0.3s, box-shadow 0.3s',
     textAlign: 'center',
+    cursor: 'pointer',
+    marginBottom: '20px', // To add some space between the buttons
+    border: 'none', // Remove the border
   },
 };
 

@@ -11,9 +11,10 @@ const Registration = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Check if all fields are filled
+    // 全てのフィールドが埋まっているか確認
     if (email && password && confirmPassword && username && department) {
       setIsFormValid(true);
     } else {
@@ -24,28 +25,31 @@ const Registration = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError('パスワードが一致しません');
       return;
     }
+    setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       const departmentId = getDepartmentId(department);
 
-      // Send user information to API
+      // ユーザー情報をAPIに送信
       const response = await sendUserDataToAPI(user.uid, username, departmentId);
 
       if (response.registration === true) {
-        setMessage('User registered successfully');
-        // Redirect to /completion
-        window.location.href = '/completion'; // Assuming completion is the route to redirect
+        setMessage('ユーザー登録が成功しました');
+        // /completion へリダイレクト
+        window.location.href = '/completion'; // completionがリダイレクト先のルートであると仮定
       } else {
-        setError('Failed to register user');
+        setError('ユーザー登録に失敗しました');
       }
-      console.log('User registered:', user);
+      console.log('ユーザー登録:', user);
     } catch (error) {
       setError(error.message);
-      console.error('Error registering user:', error);
+      console.error('ユーザー登録エラー:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,73 +93,73 @@ const Registration = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('ネットワーク応答が不正です');
       }
 
       const data = await response.json();
-      console.log('API response:', data); // APIのレスポンスデータをコンソールに表示
+      console.log('API応答:', data); // APIのレスポンスデータをコンソールに表示
       return data;
     } catch (error) {
-      console.error('Error sending user data to API:', error);
-      setError('Failed to send user data');
+      console.error('ユーザーデータ送信エラー:', error);
+      setError('ユーザーデータの送信に失敗しました');
     }
   };
 
   return (
     <div style={styles.container}>
       <div style={styles.logo}>ProNavi</div>
-      <h1 style={styles.title}>User Registration</h1>
+      <h1 style={styles.title}>ユーザー登録</h1>
       {error && <p style={styles.error}>{error}</p>}
       {message && <p style={styles.message}>{message}</p>}
       <form onSubmit={handleSubmit} style={styles.form}>
         <div style={styles.inputGroup}>
-          <label style={styles.label}>Email Address</label>
+          <label style={styles.label}>メールアドレス</label>
           <input
             name="email"
             type="email"
-            placeholder="Email"
+            placeholder="メールアドレス"
             value={email}
             onChange={handleChangeEmail}
             style={styles.input}
           />
         </div>
         <div style={styles.inputGroup}>
-          <label style={styles.label}>Password</label>
+          <label style={styles.label}>パスワード</label>
           <input
             name="password"
             type="password"
-            placeholder="Password"
+            placeholder="パスワード"
             value={password}
             onChange={handleChangePassword}
             style={styles.input}
           />
         </div>
         <div style={styles.inputGroup}>
-          <label style={styles.label}>Confirm Password</label>
+          <label style={styles.label}>パスワード確認</label>
           <input
             name="confirmPassword"
             type="password"
-            placeholder="Confirm Password"
+            placeholder="パスワード確認"
             value={confirmPassword}
             onChange={handleChangeConfirmPassword}
             style={styles.input}
           />
         </div>
         <div style={styles.inputGroup}>
-          <label style={styles.label}>Username</label>
+          <label style={styles.label}>氏名</label>
           <input
             name="username"
             type="text"
-            placeholder="Username"
+            placeholder="氏名"
             value={username}
             onChange={handleChangeUsername}
             style={styles.input}
           />
         </div>
         <div style={styles.inputGroup}>
-          <label style={styles.label}>Department</label>
+          <label style={styles.label}>学系</label>
           <select value={department} onChange={handleChangeDepartment} style={styles.input}>
-            <option value="">Select your department</option>
+            <option value="">学系を選択してください</option>
             <option value="RU">RU</option>
             <option value="RB">RB</option>
             <option value="RD">RD</option>
@@ -165,7 +169,9 @@ const Registration = () => {
           </select>
         </div>
         <div style={styles.buttonContainer}>
-          <button type="submit" style={{ ...styles.button, opacity: isFormValid ? 1 : 0.6, cursor: isFormValid ? 'pointer' : 'not-allowed' }} disabled={!isFormValid}>Register</button>
+          <button type="submit" style={{ ...styles.button, opacity: isFormValid ? 1 : 0.6, cursor: isFormValid ? 'pointer' : 'not-allowed' }} disabled={!isFormValid || loading}>
+            {loading ? <div style={styles.spinner}></div> : '登録'}
+          </button>
         </div>
       </form>
     </div>
@@ -259,6 +265,27 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
   },
+  spinner: {
+    border: '4px solid rgba(255, 255, 255, 0.3)',
+    borderRadius: '50%',
+    borderTop: '4px solid #ffffff',
+    width: '20px',
+    height: '20px',
+    animation: 'spin 1s linear infinite',
+  },
 };
+
+const globalStyles = `
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+
+// スタイルをドキュメントヘッドに追加
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = globalStyles;
+document.head.appendChild(styleSheet);
 
 export default Registration;
