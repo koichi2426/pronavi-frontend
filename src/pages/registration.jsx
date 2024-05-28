@@ -87,7 +87,7 @@ const Registration = () => {
       }
 
       const data = await response.json();
-      console.log('API response:', data);
+      console.log('API response:', data); // APIのレスポンスデータをコンソールに表示
     } catch (error) {
       console.error('Error sending user data to API:', error);
       setError('Failed to send user data');
