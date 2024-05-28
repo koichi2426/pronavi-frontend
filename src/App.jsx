@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Login from './pages/login';
-import Completion from './pages/completion';
 
 import './App.css';
 import Status from './pages/status';
@@ -18,7 +17,6 @@ function App() {
           <Route path="/status" element={<Status />} />
           <Route path="/registration" element={<Registration />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/completion" element={<Completion />} />
         </Routes>
       </Router>
     </AuthProvider>

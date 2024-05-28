@@ -14,7 +14,7 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      console.log('現在のユーザー:', user);
+      console.log('Current user:', user);
       navigate('/status');
     }
   }, [user, navigate]);
@@ -24,15 +24,11 @@ const Login = () => {
     setLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log('サインインしたユーザー:', userCredential.user);
+      console.log('User signed in:', userCredential.user);
       navigate('/status');
     } catch (error) {
       setError(error.message);
-<<<<<<< HEAD
       console.error('Error signing in:', error);
-=======
-      console.error('サインインエラー:', error);
->>>>>>> development
     } finally {
       setLoading(false);
     }
@@ -45,38 +41,22 @@ const Login = () => {
       {!user && (
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.inputGroup}>
-<<<<<<< HEAD
             <label style={styles.label}>Email Address</label>
             <input
               name="email"
               type="email"
               placeholder="Email Address"
-=======
-            <label style={styles.label}>メールアドレス</label>
-            <input
-              name="email"
-              type="email"
-              placeholder="メールアドレス"
->>>>>>> development
               value={email}
               onChange={(event) => setEmail(event.currentTarget.value)}
               style={styles.input}
             />
           </div>
           <div style={styles.inputGroup}>
-<<<<<<< HEAD
             <label style={styles.label}>Password</label>
             <input
               name="password"
               type="password"
               placeholder="Password"
-=======
-            <label style={styles.label}>パスワード</label>
-            <input
-              name="password"
-              type="password"
-              placeholder="パスワード"
->>>>>>> development
               value={password}
               onChange={(event) => setPassword(event.currentTarget.value)}
               style={styles.passwordInput}
@@ -84,11 +64,7 @@ const Login = () => {
           </div>
           <div style={styles.buttonContainer}>
             <button type="submit" style={styles.button} disabled={loading}>
-<<<<<<< HEAD
               {loading ? <div style={styles.spinner}></div> : 'Login'}
-=======
-              {loading ? <div style={styles.spinner}></div> : 'ログイン'}
->>>>>>> development
             </button>
           </div>
         </form>
@@ -200,11 +176,7 @@ const globalStyles = `
   }
 `;
 
-<<<<<<< HEAD
 // Append the styles to the document head
-=======
-// スタイルをドキュメントヘッドに追加
->>>>>>> development
 const styleSheet = document.createElement("style");
 styleSheet.type = "text/css";
 styleSheet.innerText = globalStyles;
