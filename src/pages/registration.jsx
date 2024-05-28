@@ -33,9 +33,15 @@ const Registration = () => {
       const departmentId = getDepartmentId(department);
 
       // Send user information to API
-      await sendUserDataToAPI(user.uid, username, departmentId);
+      const response = await sendUserDataToAPI(user.uid, username, departmentId);
 
-      setMessage('User registered successfully');
+      if (response.registration === true) {
+        setMessage('User registered successfully');
+        // Redirect to /completion
+        window.location.href = '/completion'; // Assuming completion is the route to redirect
+      } else {
+        setError('Failed to register user');
+      }
       console.log('User registered:', user);
     } catch (error) {
       setError(error.message);
@@ -88,6 +94,7 @@ const Registration = () => {
 
       const data = await response.json();
       console.log('API response:', data); // APIのレスポンスデータをコンソールに表示
+      return data;
     } catch (error) {
       console.error('Error sending user data to API:', error);
       setError('Failed to send user data');
