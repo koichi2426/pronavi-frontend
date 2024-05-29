@@ -11,7 +11,7 @@ const Home = () => {
   }, []);
 
   const handleButtonClick = () => {
-    window.location.href = 'http://localhost:5173/status';
+    window.location.href = 'http://133.14.14.13/status';
   };
 
   return (
