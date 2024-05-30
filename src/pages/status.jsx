@@ -49,13 +49,14 @@ const Status = () => {
     if (user) {
       try {
         const response = await fetch(`http://133.14.14.13/railsapp/api/v1/users/${user.uid}/schedules`, {
-          method: 'POST',
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            user_id: user.uid,
-            status_id: statusId,
+            schedule: {
+              status_id: statusId,
+            },
           }),
         });
         const result = await response.json();
