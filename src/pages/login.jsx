@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useAuthContext } from '../context/AuthContext';
 
 const Login = () => {
   const { user } = useAuthContext();
-  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -15,7 +13,7 @@ const Login = () => {
   useEffect(() => {
     if (user) {
       console.log('現在のユーザー:', user);
-      window.location.href = 'http://133.14.14.13/status';
+      window.location.replace('http://133.14.14.13/status');
     }
   }, [user]);
 
@@ -25,7 +23,7 @@ const Login = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log('サインインしたユーザー:', userCredential.user);
-      window.location.href = 'http://133.14.14.13/status';
+      window.location.replace('http://133.14.14.13/status');
     } catch (error) {
       setError(error.message);
       console.error('サインインエラー:', error);
