@@ -11,13 +11,11 @@ const Status = () => {
   const [userStatus, setUserStatus] = useState('');
 
   useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    } else {
+    if (user) {
       console.log('Logged in user:', user);
       fetchUserData(user.uid);
     }
-  }, [user, navigate]);
+  }, [user]);
 
   const fetchUserData = async (userId) => {
     try {
@@ -41,7 +39,7 @@ const Status = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate('/');
+      window.location.reload(); // Reload the page to update the login state
     } catch (error) {
       console.error('Error signing out:', error);
     }
@@ -74,8 +72,18 @@ const Status = () => {
   };
 
   const handleHomeClick = () => {
-    navigate('/');
+    window.location.href = '/';
   };
+
+  if (!user) {
+    return (
+      <div style={styles.container}>
+        <h1 style={styles.title}>Status Page</h1>
+        <p style={styles.description}>ログインが必要です</p>
+        <button style={styles.button} onClick={() => navigate('/login')}>ログインページへ</button>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container}>
