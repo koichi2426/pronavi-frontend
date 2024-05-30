@@ -39,7 +39,7 @@ const Status = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      window.location.reload(); // Reload the page to update the login state
+      navigate('/'); // Redirect to home page after logout
     } catch (error) {
       console.error('Error signing out:', error);
     }
