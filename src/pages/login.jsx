@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useAuthContext } from '../context/AuthContext';
@@ -9,6 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const emailInputRef = useRef(null);
 
   useEffect(() => {
     if (user) {
@@ -16,6 +17,12 @@ const Login = () => {
       window.location.assign('http://133.14.14.13/status');
     }
   }, [user]);
+
+  useEffect(() => {
+    if (emailInputRef.current) {
+      emailInputRef.current.focus();
+    }
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -41,6 +48,7 @@ const Login = () => {
           <div style={styles.inputGroup}>
             <label style={styles.label}>メールアドレス</label>
             <input
+              ref={emailInputRef}
               name="email"
               type="email"
               placeholder="メールアドレス"
