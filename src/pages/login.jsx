@@ -15,9 +15,9 @@ const Login = () => {
   useEffect(() => {
     if (user) {
       console.log('現在のユーザー:', user);
-      navigate('http://133.14.14.13/status');
+      window.location.href = '/status';
     }
-  }, [user, navigate]);
+  }, [user]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -25,7 +25,7 @@ const Login = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log('サインインしたユーザー:', userCredential.user);
-      navigate('http://133.14.14.13/status');
+      window.location.href = '/status';
     } catch (error) {
       setError(error.message);
       console.error('サインインエラー:', error);

@@ -21,7 +21,7 @@ const Status = () => {
 
   const fetchUserData = async (userId) => {
     try {
-      const response = await fetch('http://127.0.0.1:3001/userget');
+      const response = await fetch('http://133.14.14.13/railsapp/api/v1/users/index');
       const data = await response.json();
       const currentUser = data.find(u => u.User_id === userId);
       if (currentUser) {
@@ -50,7 +50,7 @@ const Status = () => {
   const updateStatus = async (statusId) => {
     if (user) {
       try {
-        const response = await fetch('http://127.0.0.1:3001/updatestatus', {
+        const response = await fetch(`http://133.14.14.13/railsapp/api/v1/users/${user.uid}/schedules`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

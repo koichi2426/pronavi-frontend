@@ -4,14 +4,14 @@ const Home = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:3001/userget')
+    fetch('http://133.14.14.13/railsapp/api/v1/users/index')
       .then(response => response.json())
       .then(data => setUsers(data))
       .catch(error => console.error('Error fetching users:', error));
   }, []);
 
   const handleButtonClick = () => {
-    window.location.href = 'http://133.14.14.13/status';
+    window.location.href = '/status';
   };
 
   return (
