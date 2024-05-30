@@ -15,7 +15,7 @@ const Login = () => {
   useEffect(() => {
     if (user) {
       console.log('現在のユーザー:', user);
-      window.location.href = '/status';
+      window.location.href = 'http://133.14.14.13/status';
     }
   }, [user]);
 
@@ -25,7 +25,7 @@ const Login = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log('サインインしたユーザー:', userCredential.user);
-      window.location.href = '/status';
+      window.location.href = 'http://133.14.14.13/status';
     } catch (error) {
       setError(error.message);
       console.error('サインインエラー:', error);
