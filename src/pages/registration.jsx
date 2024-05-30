@@ -86,9 +86,9 @@ const Registration = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          User_id: userId,
-          User_name: userName,
-          Department_id: departmentId,
+          user_id: userId,
+          user_name: userName,
+          department_id: departmentId,
         }),
       });
 

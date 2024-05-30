@@ -56,8 +56,8 @@ const Status = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            User_id: user.uid,
-            Status_id: statusId,
+            user_id: user.uid,
+            status_id: statusId,
           }),
         });
         const result = await response.json();
