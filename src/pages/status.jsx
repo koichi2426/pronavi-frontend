@@ -81,7 +81,7 @@ const Status = () => {
       <div style={styles.container}>
         <h1 style={styles.title}>Status Page</h1>
         <p style={styles.description}>ログインが必要です</p>
-        <button style={styles.button} onClick={() => navigate('/login')}>ログインページへ</button>
+        <button style={styles.button} onClick={() => navigate('/')}>ホームページへ</button>
       </div>
     );
   }
