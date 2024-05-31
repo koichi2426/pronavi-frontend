@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { useAuthContext } from '../context/AuthContext';
 
 const Home = () => {
   const [users, setUsers] = useState([]);
+  const { user } = useAuthContext();
+
+  useEffect(() => {
+    if (user) {
+      console.log('現在のユーザー:', user);
+    }
+  }, [user]);
 
   useEffect(() => {
     fetch('http://133.14.14.13/railsapp/api/v1/users/index')
@@ -11,7 +19,11 @@ const Home = () => {
   }, []);
 
   const handleButtonClick = () => {
-    window.location.href = 'http://133.14.14.13/login';
+    if (user) {
+      window.location.assign('http://133.14.14.13/status');
+    } else {
+      window.location.assign('http://133.14.14.13/login');
+    }
   };
 
   return (

@@ -11,12 +11,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const emailInputRef = useRef(null);
 
-  useEffect(() => {
-    if (user) {
-      console.log('現在のユーザー:', user);
-      window.location.assign('http://133.14.14.13/status');
-    }
-  }, [user]);
 
   useEffect(() => {
     if (emailInputRef.current) {
