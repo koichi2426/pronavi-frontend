@@ -26,7 +26,7 @@ const Registration = () => {
     event.preventDefault();
 
     if (!/^\d{3,5}@ms\.dendai\.ac\.jp$/.test(email)) {
-      setError('メールアドレスは教育用メールアドレスを入力してください。');
+      setError('教育用メールアドレスを入力してください。');
       return;
     }
 
