@@ -4,7 +4,7 @@ import { Box, Flex, Heading, Spacer, Button, Input } from '@yamada-ui/react';
 
 const Header = () => {
   return (
-    <Box as="header" bg="orange.200" p={2} position="fixed" w="100%">
+    <Box as="header" bg="orange.200" p={2} position="fixed" w="100%" top="0" zIndex="1000">
       <Flex align="center">
         <Heading as="h3" size="lg">
           Pronavi

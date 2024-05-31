@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { Box } from '@yamada-ui/react';
 import Login from './pages/login';
@@ -15,20 +15,28 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Box className="App">
-          <Header />
-          <Box mt="60px"> {/* Adjust for fixed header */}
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/status" element={<Status />} />
-              <Route path="/registration" element={<Registration />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/completion" element={<Completion />} />
-            </Routes>
-          </Box>
-        </Box>
+        <Main />
       </Router>
     </AuthProvider>
+  );
+}
+
+function Main() {
+  const location = useLocation();
+
+  return (
+    <Box className="App">
+      {location.pathname === '/' && <Header />}
+      <Box mt={location.pathname === '/' ? "60px" : "0px"}> 
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/status" element={<Status />} />
+          <Route path="/registration" element={<Registration />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/completion" element={<Completion />} />
+        </Routes>
+      </Box>
+    </Box>
   );
 }
 
