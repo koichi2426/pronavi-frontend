@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
-import { useAuthContext } from '../context/AuthContext';
 
 const Login = () => {
-  const { user } = useAuthContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const emailInputRef = useRef(null);
-
 
   useEffect(() => {
     if (emailInputRef.current) {
@@ -37,38 +34,36 @@ const Login = () => {
     <div style={styles.container}>
       <div style={styles.logo}>ProNavi</div>
       {error && <p style={styles.error}>{error}</p>}
-      {!user && (
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>メールアドレス</label>
-            <input
-              ref={emailInputRef}
-              name="email"
-              type="email"
-              placeholder="メールアドレス"
-              value={email}
-              onChange={(event) => setEmail(event.currentTarget.value)}
-              style={styles.input}
-            />
-          </div>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>パスワード</label>
-            <input
-              name="password"
-              type="password"
-              placeholder="パスワード"
-              value={password}
-              onChange={(event) => setPassword(event.currentTarget.value)}
-              style={styles.passwordInput}
-            />
-          </div>
-          <div style={styles.buttonContainer}>
-            <button type="submit" style={styles.button} disabled={loading}>
-              {loading ? <div style={styles.spinner}></div> : 'ログイン'}
-            </button>
-          </div>
-        </form>
-      )}
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <div style={styles.inputGroup}>
+          <label style={styles.label}>メールアドレス</label>
+          <input
+            ref={emailInputRef}
+            name="email"
+            type="email"
+            placeholder="メールアドレス"
+            value={email}
+            onChange={(event) => setEmail(event.currentTarget.value)}
+            style={styles.input}
+          />
+        </div>
+        <div style={styles.inputGroup}>
+          <label style={styles.label}>パスワード</label>
+          <input
+            name="password"
+            type="password"
+            placeholder="パスワード"
+            value={password}
+            onChange={(event) => setPassword(event.currentTarget.value)}
+            style={styles.passwordInput}
+          />
+        </div>
+        <div style={styles.buttonContainer}>
+          <button type="submit" style={styles.button} disabled={loading}>
+            {loading ? <div style={styles.spinner}></div> : 'ログイン'}
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
