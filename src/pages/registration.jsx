@@ -24,10 +24,17 @@ const Registration = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!/^\d{3,5}@ms\.dendai\.ac\.jp$/.test(email)) {
+      setError('メールアドレスは教育用メールアドレスを入力してください。');
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError('パスワードが一致しません');
       return;
     }
+
     setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
