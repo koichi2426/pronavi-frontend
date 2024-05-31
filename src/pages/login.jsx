@@ -1,13 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
+import { useAuthContext } from '../context/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { user } = useAuthContext();
   const emailInputRef = useRef(null);
+
+  useEffect(() => {
+    if (user) {
+      console.log('現在のユーザー:', user);
+      window.location.assign('http://133.14.14.13/status');
+    }
+  }, [user]);
 
   useEffect(() => {
     if (emailInputRef.current) {
