@@ -18,25 +18,25 @@ const Home = () => {
           width="200px"
           height="40px"
           borderRadius="25px"
-          bg="lightgray"
-          style={{ marginRight: '30px' }}
+          bg={getBackgroundColor(person.Status_id)}
         >
-          
           <Box
             w={3}
             h={3}
             borderRadius="50%"
             bg={getStatusColor(person.Status_id)}
-            mr={2} 
+            mr={2}
+            ml={2} // Added margin-left to create space
           />
-          <Text isTruncated>{person.username}</Text>
+          <Text width="auto" maxWidth="170px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+            {person.username}
+          </Text>
         </Box>
       ))}
     </Flex>
   );
 };
 
-// 色の定義
 const getStatusColor = (status) => {
   switch (status) {
     case 1:
@@ -52,8 +52,17 @@ const getStatusColor = (status) => {
     case 6:
       return '#7FCCEC'; // private
     default:
-      return 'gray'; //その他
+      return 'gray'; // その他
   }
+};
+
+
+// 背景色の定義
+const getBackgroundColor = (status) => {
+  if (status === 5 || status === 4 || status === 6) {
+    return 'gray';
+  }
+  return 'blue.100';
 };
 
 export default Home;
