@@ -26,7 +26,7 @@ function Main() {
 
   return (
     <Box className="App">
-      {location.pathname === '/' && <Header />}
+      {location.pathname === '/' && < Header />}
       <Box mt={location.pathname === '/' ? "60px" : "0px"}> 
         <Routes>
           <Route path="/" element={<Home />} />
