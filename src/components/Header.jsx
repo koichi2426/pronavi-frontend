@@ -82,7 +82,7 @@ const Header = () => {
       </Box>
 
       {/* コンテンツの開始位置を調整 */}
-      <Box mt="1px" p={4}>
+      <Box mt="20px" p={4}>
       </Box>
     </Box>
   );

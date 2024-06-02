@@ -1,26 +1,38 @@
 import React from 'react';
 import { Text, Flex, Box } from '@yamada-ui/react';
-import { people } from '../data'; // データをインポート
+import { people } from '../data';
 
 const Home = () => {
-  // フィルタリング設定
+
   const filteredPeople = people.filter(person => person.Department_id === '1');
 
   return (
-    <Box p={4}>
+    <Flex flexWrap="wrap" p={6}>
       {filteredPeople.map((person, index) => (
-        <Flex key={index} align="center" mb={2}>
+        <Box
+          key={index}
+          mr={4}
+          mb={4}
+          display="flex"
+          alignItems="center"
+          width="200px"
+          height="40px"
+          borderRadius="25px"
+          bg="lightgray"
+          style={{ marginRight: '30px' }}
+        >
+          
           <Box
             w={3}
             h={3}
             borderRadius="50%"
             bg={getStatusColor(person.Status_id)}
-            mr={2}
+            mr={2} 
           />
-          <Text>{person.username}</Text>
-        </Flex>
+          <Text isTruncated>{person.username}</Text>
+        </Box>
       ))}
-    </Box>
+    </Flex>
   );
 };
 
