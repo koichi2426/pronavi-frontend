@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useAuthContext } from '../context/AuthContext';
+import StHeader from '../components/StHeader';
+
 
 const Status = () => {
   const { user } = useAuthContext();
@@ -27,6 +29,7 @@ const Status = () => {
 
   return (
     <div>
+      <StHeader />
       <h1>Status Page</h1>
       <p>This is the status page.</p>
       <button onClick={handleLogout}>ログアウト</button>
