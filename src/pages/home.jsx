@@ -1,28 +1,14 @@
 import React from 'react';
-import { Box, Flex, Text } from '@yamada-ui/react';
-
-// ステータスデータ
-const people = [
-  { username: '山田 太郎', Department_id: '1', Status_id: 1 },
-  { username: '鈴木 花子', Department_id: '2', Status_id: 2 },
-];
-
-// ステータスの色を定義
-const getStatusColor = (status) => {
-  switch (status) {
-    case 1:
-      return 'red';
-    case 2:
-      return 'blue';
-    default:
-      return 'gray';
-  }
-};
+import { Text, Flex, Box } from '@yamada-ui/react';
+import { people } from '../data'; // データをインポート
 
 const Home = () => {
+  // フィルタリング設定
+  const filteredPeople = people.filter(person => person.Department_id === '1');
+
   return (
     <Box p={4}>
-      {people.map((person, index) => (
+      {filteredPeople.map((person, index) => (
         <Flex key={index} align="center" mb={2}>
           <Box
             w={3}
@@ -36,6 +22,26 @@ const Home = () => {
       ))}
     </Box>
   );
+};
+
+// 色の定義
+const getStatusColor = (status) => {
+  switch (status) {
+    case 1:
+      return '#038744'; // 教授室
+    case 2:
+      return '#D80147'; // 不在
+    case 3:
+      return '#ED791D'; // 研究室
+    case 4:
+      return '#FFE501'; // 出張
+    case 5:
+      return '#02518E'; // 帰宅
+    case 6:
+      return '#7FCCEC'; // private
+    default:
+      return 'gray'; //その他
+  }
 };
 
 export default Home;
