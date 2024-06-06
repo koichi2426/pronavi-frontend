@@ -47,7 +47,7 @@ const Registration = () => {
       if (response.registration === true) {
         setMessage('ユーザー登録が成功しました');
         // /completion へリダイレクト
-        window.location.href = 'http://133.14.14.13/completion'; // completionがリダイレクト先のルートであると仮定
+        window.location.href = 'https://133.14.14.13/completion'; // completionがリダイレクト先のルートであると仮定
       } else {
         setError('ユーザー登録に失敗しました');
       }
@@ -87,7 +87,7 @@ const Registration = () => {
 
   const sendUserDataToAPI = async (userId, userName, departmentId) => {
     try {
-      const response = await fetch('http://133.14.14.13/railsapp/api/v1/users/register', {
+      const response = await fetch('https://133.14.14.13/railsapp/api/v1/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
