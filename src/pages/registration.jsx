@@ -47,7 +47,7 @@ const Registration = () => {
       if (response.registration === true) {
         setMessage('ユーザー登録が成功しました');
         // /completion へリダイレクト
-        window.location.href = 'https://133.14.14.13/completion'; // completionがリダイレクト先のルートであると仮定
+        window.location.href = 'http://133.14.14.13/completion'; // completionがリダイレクト先のルートであると仮定
       } else {
         setError('ユーザー登録に失敗しました');
       }

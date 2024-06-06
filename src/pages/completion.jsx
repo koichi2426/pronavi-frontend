@@ -13,7 +13,7 @@ const Completion = () => {
   }, []);
 
   const handleRedirect = () => {
-    window.location.href = 'https://133.14.14.13/login';
+    window.location.href = 'http://133.14.14.13/login';
   };
 
   return (

@@ -30,9 +30,9 @@ const Home = () => {
 
   const handleButtonClick = () => {
     if (user) {
-      window.location.assign('https://133.14.14.13/status');
+      window.location.assign('http://133.14.14.13/status');
     } else {
-      window.location.assign('https://133.14.14.13/login');
+      window.location.assign('http://133.14.14.13/login');
     }
   };
 
