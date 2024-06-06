@@ -8,6 +8,16 @@ const Home = () => {
   useEffect(() => {
     if (user) {
       console.log('現在のユーザー:', user);
+      if (user.uid) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            console.log('現在地の座標:', position.coords.latitude, position.coords.longitude);
+          },
+          error => {
+            console.error('Error getting location:', error);
+          }
+        );
+      }
     }
   }, [user]);
 

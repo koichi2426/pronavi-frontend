@@ -13,6 +13,16 @@ const Status = () => {
   useEffect(() => {
     if (user) {
       console.log('Logged in user:', user);
+      if (user.uid) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            console.log('Current coordinates:', position.coords.latitude, position.coords.longitude);
+          },
+          error => {
+            console.error('Error getting location:', error);
+          }
+        );
+      }
       fetchUserData(user.uid);
     }
   }, [user]);
