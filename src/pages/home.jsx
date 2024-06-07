@@ -1,9 +1,8 @@
 import React from 'react';
 import { Text, Flex, Box } from '@yamada-ui/react';
-import { people } from '../data';
+import { people } from '../data'; // データをインポート
 
 const Home = () => {
-
   const filteredPeople = people.filter(person => person.Department_id === '1');
 
   return (
@@ -11,58 +10,52 @@ const Home = () => {
       {filteredPeople.map((person, index) => (
         <Box
           key={index}
-          mr={4}
+          mr={10}
           mb={4}
           display="flex"
           alignItems="center"
           width="200px"
-          height="40px"
+          height="45px"
           borderRadius="25px"
           bg={getBackgroundColor(person.Status_id)}
+          padding="0 8px" // paddingを追加
         >
-          <Box
-            w={3}
-            h={3}
-            borderRadius="50%"
-            bg={getStatusColor(person.Status_id)}
-            mr={2}
-            ml={2} // Added margin-left to create space
-          />
-          <Text width="auto" maxWidth="170px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+          <Text width="auto" maxWidth="116px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
             {person.username}
           </Text>
+          <Text ml="auto" fontWeight="bold">{getStatusText(person.Status_id)}</Text>
         </Box>
       ))}
     </Flex>
   );
 };
 
-const getStatusColor = (status) => {
+// ステータスの文字を取得
+const getStatusText = (status) => {
   switch (status) {
     case 1:
-      return '#038744'; // 教授室
+      return '教授室';
     case 2:
-      return '#D80147'; // 不在
+      return '学内';
     case 3:
-      return '#ED791D'; // 研究室
+      return '研究室';
     case 4:
-      return '#FFE501'; // 出張
+      return '出張';
     case 5:
-      return '#02518E'; // 帰宅
+      return '帰宅';
     case 6:
-      return '#7FCCEC'; // private
+      return '対応不可';
     default:
-      return 'gray'; // その他
+      return 'その他';
   }
 };
-
 
 // 背景色の定義
 const getBackgroundColor = (status) => {
   if (status === 5 || status === 4 || status === 6) {
-    return 'gray';
+    return 'gray.300';
   }
-  return 'blue.100';
+  return 'lightgreen';
 };
 
 export default Home;
