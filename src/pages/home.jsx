@@ -22,7 +22,7 @@ const Home = () => {
   }, [user]);
 
   useEffect(() => {
-    fetch('https://133.14.14.13/railsapp/api/v1/users/index')
+    fetch('http://133.14.14.13/railsapp/api/v1/users/index')
       .then(response => response.json())
       .then(data => setUsers(data))
       .catch(error => console.error('Error fetching users:', error));
