@@ -88,102 +88,32 @@ const Status = () => {
 
   if (!user) {
     return (
-      <div style={styles.container}>
-        <h1 style={styles.title}>Status Page</h1>
-        <div style={styles.spinner}></div>
+      <div>
+        <h1>Status Page</h1>
+        <div>Loading...</div>
       </div>
     );
   }
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>Status Page</h1>
-      <p style={styles.description}>This is the status page.</p>
-      {userName && <p style={styles.userName}>Logged in as: <span style={styles.bold}>{userName}</span></p>}
-      {userStatus && <p style={styles.userStatus}>Current status: <span style={styles.bold}>{userStatus}</span></p>}
-      <div style={styles.buttonContainer}>
+    <div>
+      <h1>Status Page</h1>
+      <p>This is the status page.</p>
+      {userName && <p>Logged in as: <strong>{userName}</strong></p>}
+      {userStatus && <p>Current status: <strong>{userStatus}</strong></p>}
+      <div>
         {[1, 2, 3, 4, 5, 6].map(statusId => (
-          <button
-            key={statusId}
-            style={styles.button}
-            onClick={() => updateStatus(statusId)}
-          >
+          <button key={statusId} onClick={() => updateStatus(statusId)}>
             {statusId}
           </button>
         ))}
       </div>
-      <div style={styles.buttonContainer}>
-        <button style={styles.button} onClick={handleHomeClick}>ホームに移動</button>
-        <button style={styles.button} onClick={handleLogout}>ログアウト</button>
+      <div>
+        <button onClick={handleHomeClick}>ホームに移動</button>
+        <button onClick={handleLogout}>ログアウト</button>
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '20px',
-    fontFamily: 'Arial, sans-serif',
-    backgroundColor: '#f7f7f7',
-    minHeight: '100vh',
-  },
-  title: {
-    color: '#333',
-    marginBottom: '20px',
-  },
-  description: {
-    color: '#666',
-    marginBottom: '20px',
-  },
-  userName: {
-    color: '#555',
-    marginBottom: '10px',
-    fontSize: '18px',
-  },
-  userStatus: {
-    color: '#555',
-    marginBottom: '20px',
-    fontSize: '18px',
-  },
-  bold: {
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  button: {
-    backgroundColor: '#007bff',
-    color: 'white',
-    border: 'none',
-    padding: '10px 20px',
-    margin: '5px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s',
-    fontSize: '16px',
-  },
-  buttonContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    marginBottom: '20px',
-  },
-  buttonHover: {
-    backgroundColor: '#0056b3',
-  },
-  spinner: {
-    border: '16px solid #f3f3f3', /* Light grey */
-    borderTop: '16px solid #3498db', /* Blue */
-    borderRadius: '50%',
-    width: '120px',
-    height: '120px',
-    animation: 'spin 2s linear infinite',
-  },
-  '@keyframes spin': {
-    '0%': { transform: 'rotate(0deg)' },
-    '100%': { transform: 'rotate(360deg)' },
-  },
 };
 
 export default Status;
