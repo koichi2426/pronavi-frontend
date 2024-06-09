@@ -26,7 +26,7 @@ const Status = () => {
     }
   }, [user, navigate]);
 
-  const handleStatus = (status) => {
+  const handleStatusChange = (status) => {
     setCurrentStatus(status.description);
   };
 
@@ -41,10 +41,9 @@ const Status = () => {
         bg="gray.10"
         p={1}
         zIndex="999"
+        textAlign="center"
       >
-        <Text fontSize="80">
-          {currentStatus}
-        </Text>
+        <Text fontSize="80">{currentStatus}</Text>
       </Box>
 
       <Box
@@ -55,21 +54,28 @@ const Status = () => {
         bg="gray.10"
         p={1}
         zIndex="999"
+        width="100%"
       >
-        <Flex justify="space-between" wrap="wrap">
+        <Flex
+          justify="center"
+          align="center"
+          wrap="wrap"
+          className="status-container"
+        >
           {statusLegend.map((status, index) => (
-            <Flex key={index} align="center" m={10}>
-              <Button 
-                onClick={() => handleStatus(status)} 
-                bg={status.color}  
-                color="black" 
-                w="120px" 
-                h="100px"
-                _hover={{ color: 'green.500' }}
-              >
-                {status.description}
-              </Button>
-            </Flex>
+            <Button
+              key={index}
+              onClick={() => handleStatusChange(status)}
+              bg={status.color}
+              color="black"
+              width="120px"
+              height="100px"
+              m="10px"
+              _hover={{ color: 'green.500' }}
+              className="status-button"
+            >
+              {status.description}
+            </Button>
           ))}
         </Flex>
       </Box>
