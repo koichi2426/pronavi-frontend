@@ -39,7 +39,7 @@ const Header = ({ onFilterChange }) => {
             focusBorderColor="gray.500"
           />
           <nav>
-            <Button as={Link} to="/login" variant="link" color="black" _hover={{ color: 'red.500' }}>
+            <Button as={Link} to="/login" variant="link" color="black" _hover={{ color: 'green.500' }}>
               教授の方はこちら
             </Button>
           </nav>
