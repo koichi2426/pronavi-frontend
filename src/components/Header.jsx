@@ -1,14 +1,25 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Flex, Heading, Spacer, Button, Input, Select } from '@yamada-ui/react';
+import { Box, Flex, Heading, Spacer, Button, Input, Checkbox } from '@yamada-ui/react';
 
-const Header = () => {
-  const [filter, setFilter] = useState('RD'); // フィルタリングオプションの初期値を設定
+const Header = ({ onFilterChange }) => {
+  const [selectedFilter, setSelectedFilter] = useState('1'); // フィルタリングオプションの初期値を設定
 
   // フィルタリングオプションが変更されたときの処理
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
-    onSelectFilter(e.target.value);
+  const handleFilterChange = (filter) => {
+    setSelectedFilter(filter);
+    onFilterChange(filter); // フィルターが変更されたときにコールバック関数を呼び出す
+  };
+
+  // 部署のIDと表示名のマッピング
+  const departmentMap = {
+    '1': 'RU',
+    '2': 'RB',
+    '3': 'RD',
+    '4': 'RE',
+    '5': 'RM',
+    '6': 'RG',
+    '7': 'EX'
   };
 
   return (
@@ -37,27 +48,27 @@ const Header = () => {
       {/* ステータスバー部分 */}
       <Box
         position="fixed"
-        top="60px"
+        top="55px"
         w="100%"
-        bg="gray.10"
+        bg="white"
         p={1}
         zIndex="999"
         boxShadow="sm"
       >
-
-        <Flex justify="space-between" wrap="wrap">
-        <Spacer />
-          <Select onChange={handleFilterChange} value={filter} maxW="100px" mt={1} ml={4}>
-            {['RD', 'RB', 'RG'].map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </Select>
+        <Flex justify="space-around" wrap="wrap">
+          {Object.entries(departmentMap).map(([id, name]) => (
+            <Checkbox
+              key={id}
+              isChecked={selectedFilter === id}
+              onChange={() => handleFilterChange(id)}
+            >
+              {name}
+            </Checkbox>
+          ))}
         </Flex>
       </Box>
 
-      <Box mt="20px" p={4}>
+      <Box mt="2px" p={4}>
       </Box>
     </Box>
   );
