@@ -7,12 +7,12 @@ import StHeader from '../components/StHeader';
 import { Box, Flex, Button, Text } from '@yamada-ui/react';
 
 const statusLegend = [
-  { color: '#038744', description: '教授室', number: 0 },
-  { color: '#D80147', description: '大学内', number: 1 },
-  { color: '#ED791D', description: '研究室', number: 2 },
-  { color: '#FFE501', description: '出張', number: 3 },
-  { color: '#02518E', description: '帰宅', number: 4 },
-  { color: '#7FCCEC', description: '対応不可', number: 5 },
+  { color: '#038744', description: '教授室', number: 1 },
+  { color: '#D80147', description: '大学内', number: 2 },
+  { color: '#ED791D', description: '研究室', number: 3 },
+  { color: '#FFE501', description: '出張', number: 4 },
+  { color: '#02518E', description: '帰宅', number: 5 },
+  { color: '#7FCCEC', description: '対応不可', number: 6 },
 ]; //stateの色と場所の設定
 
 const Status = () => {
