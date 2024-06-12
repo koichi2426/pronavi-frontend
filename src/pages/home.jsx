@@ -22,7 +22,7 @@ const Home = () => {
   }, [user]);
 
   useEffect(() => {
-    fetch('https://133.14.14.13/railsapp/api/v1/users/index')
+    fetch('https://www.pronavi.online/railsapp/api/v1/users/index')
       .then(response => response.json())
       .then(data => setUsers(data))
       .catch(error => console.error('ユーザーの取得エラー:', error));
