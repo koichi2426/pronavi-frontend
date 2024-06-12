@@ -14,7 +14,7 @@ const Login = () => {
   useEffect(() => {
     if (user) {
       console.log('現在のユーザー:', user);
-      window.location.assign('http://www.pronavi.online/status');
+      window.location.assign('https://www.pronavi.online/status');
     }
   }, [user]);
 
@@ -30,7 +30,7 @@ const Login = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log('サインインしたユーザー:', userCredential.user);
-      window.location.assign('http://www.pronavi.online/status');
+      window.location.assign('https://www.pronavi.online/status');
     } catch (error) {
       setError(error.message);
       console.error('サインインエラー:', error);

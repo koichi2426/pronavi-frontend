@@ -22,7 +22,7 @@ const Home = () => {
   }, [user]);
 
   useEffect(() => {
-    fetch('http://133.14.14.13/railsapp/api/v1/users/index')
+    fetch('https://133.14.14.13/railsapp/api/v1/users/index')
       .then(response => response.json())
       .then(data => setUsers(data))
       .catch(error => console.error('ユーザーの取得エラー:', error));
@@ -30,9 +30,9 @@ const Home = () => {
 
   const handleButtonClick = () => {
     if (user) {
-      window.location.assign('http://www.pronavi.online/status');
+      window.location.assign('https://www.pronavi.online/status');
     } else {
-      window.location.assign('http://www.pronavi.online/login');
+      window.location.assign('https://www.pronavi.online/login');
     }
   };
 

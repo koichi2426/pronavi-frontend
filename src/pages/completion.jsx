@@ -13,7 +13,7 @@ const Completion = () => {
   }, []);
 
   const handleRedirect = () => {
-    window.location.href = 'http://www.pronavi.online/login';
+    window.location.href = 'https://www.pronavi.online/login';
   };
 
   return (
