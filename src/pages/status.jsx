@@ -44,7 +44,7 @@ const Status = () => {
 
   const fetchUserData = async (userId) => {
     try {
-      const response = await fetch('http://133.14.14.13/railsapp/api/v1/users/index'); // ユーザーデータを取得するAPI呼び出し
+      const response = await fetch('https://www.pronavi.online/railsapp/api/v1/users/index'); // ユーザーデータを取得するAPI呼び出し
       const data = await response.json(); // レスポンスをJSON形式に変換
       const currentUser = data.find(u => u.User_id === userId); // ユーザーIDで一致するユーザーを検索
       if (currentUser) {
@@ -74,7 +74,7 @@ const Status = () => {
     if (user) {
       try {
         const statusId = getStatusId(statusDescription); // 状態の説明からIDを取得
-        const response = await fetch(`http://133.14.14.13/railsapp/api/v1/users/${user.uid}/schedules`, {
+        const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/${user.uid}/schedules`, {
           method: 'PATCH', // PATCHメソッドを使用してステータスを更新
           headers: {
             'Content-Type': 'application/json', // JSON形式のリクエストヘッダー
