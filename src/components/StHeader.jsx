@@ -17,7 +17,7 @@ const StHeader = () => {
 
   return (
     
-      <Box as="header" bg="orange.100" p={2} position="fixed" w="100%" top="0" zIndex="1000">
+      <Box as="header" bg="orange.50" p={2} position="fixed" w="100%" top="0" zIndex="1000">
         <Flex align="center">
           <Heading as="h3" size="lg">
             Pronavi
