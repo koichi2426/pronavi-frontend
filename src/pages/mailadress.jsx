@@ -5,6 +5,7 @@ import emailjs from 'emailjs-com';
 
 const Mailadress = () => {
   const [email, setEmail] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const checkEmailRegistered = async (email) => {
     try {
@@ -32,6 +33,7 @@ const Mailadress = () => {
 
     if (isRegistered) {
       console.log('メールアドレスは登録されています。メールを送信します...');
+      setErrorMessage('');
       emailjs.send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
@@ -46,6 +48,7 @@ const Mailadress = () => {
         });
     } else {
       console.log('メールアドレスは登録されていません。メールを送信しません。');
+      setErrorMessage('未登録メールアドレスです。');
     }
 
     setEmail('');
@@ -97,6 +100,9 @@ const Mailadress = () => {
             </Button>
           </Flex>
         </form>
+        {errorMessage && (
+          <Text color="red" mt={4}>{errorMessage}</Text>
+        )}
       </Box>
     </div>
   );
