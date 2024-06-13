@@ -12,7 +12,7 @@ const statusLegend = [
   { color: '#FFB74D', description: '研究室', number: 3 }, // 淡いオレンジ
   { color: '#FFF176', description: '出張', number: 4 }, // 淡い黄色
   { color: '#64B5F6', description: '帰宅', number: 5 }, // 淡い青
-  { color: '#B3E5FC', description: 'private', number: 6 }, // 淡い水色
+  { color: '#B3E5FC', description: '対応不可', number: 6 }, // 淡い水色
 ];
  //stateの色と場所の設定
 
