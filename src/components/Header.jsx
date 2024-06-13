@@ -19,7 +19,7 @@ const Header = ({ onFilterChange }) => {
     '4': 'RE',
     '5': 'RM',
     '6': 'RG',
-    '7': 'EX'
+    '7': 'RL'
   };
 
   return (

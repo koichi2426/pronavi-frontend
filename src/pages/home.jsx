@@ -1,8 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react'; // Reactライブラリと必要なフックをインポート
 import { Text, Flex, Box } from '@yamada-ui/react';
 import { people } from '../data'; // データインポート
+import { useAuthContext } from '../context/AuthContext'; // 認証コンテキストをインポート
 
 const Home = ({ selectedFilter }) => {
+
+  // ユーザー情報を保持するための状態と関数を定義
+  const [users, setUsers] = useState([]);
+  const { user } = useAuthContext(); // 認証コンテキストからユーザー情報を取得
+
+  useEffect(() => {
+    // ユーザーがログインしている場合の処理
+    if (user) {
+      console.log('現在のユーザー:', user); // コンソールにユーザー情報を表示
+      if (user.uid) {
+        // ユーザーの位置情報を取得
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            console.log('現在地の座標:', position.coords.latitude, position.coords.longitude); // コンソールに位置情報を表示
+          },
+          error => {
+            console.error('位置情報の取得エラー:', error); // 位置情報の取得エラーを表示
+          }
+        );
+      }
+    }
+  }, [user]); // userが変更されるたびにこのエフェクトが実行される
+
+  useEffect(() => {
+    // APIからユーザーリストを取得
+    fetch('http://133.14.14.13/railsapp/api/v1/users/index')
+      .then(response => response.json()) // レスポンスをJSON形式に変換
+      .then(data => setUsers(data)) // 取得したデータをusers状態にセット
+      .catch(error => console.error('ユーザーの取得エラー:', error)); // エラーが発生した場合にコンソールに表示
+  }, []); // このエフェクトはコンポーネントの初回レンダリング時に一度だけ実行される
+
+  const handleButtonClick = () => {
+    // ユーザーがログインしているかどうかで遷移先を変更
+    if (user) {
+      window.location.assign('http://133.14.14.13/status'); // ログインしている場合はステータスページへ
+    } else {
+      window.location.assign('http://133.14.14.13/login'); // ログインしていない場合はログインページへ
+    }
+  };
+
+
+
+
 
   // フィルタリング
   const filteredProfessors = people.filter(person => person.Department_id === selectedFilter);
