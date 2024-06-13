@@ -7,13 +7,14 @@ import StHeader from '../components/StHeader';
 import { Box, Flex, Button, Text } from '@yamada-ui/react';
 
 const statusLegend = [
-  { color: '#038744', description: '教授室', number: 1 },
-  { color: '#D80147', description: '大学内', number: 2 },
-  { color: '#ED791D', description: '研究室', number: 3 },
-  { color: '#FFE501', description: '出張', number: 4 },
-  { color: '#02518E', description: '帰宅', number: 5 },
-  { color: '#7FCCEC', description: '対応不可', number: 6 },
-]; //stateの色と場所の設定
+  { color: '#71BC78', description: '教授室', number: 1 }, // 淡い緑
+  { color: '#F48FB1', description: '不在', number: 2 }, // 淡いピンク
+  { color: '#FFB74D', description: '研究室', number: 3 }, // 淡いオレンジ
+  { color: '#FFF176', description: '出張', number: 4 }, // 淡い黄色
+  { color: '#64B5F6', description: '帰宅', number: 5 }, // 淡い青
+  { color: '#B3E5FC', description: '対応不可', number: 6 }, // 淡い水色
+];
+ //stateの色と場所の設定
 
 const Status = () => {
   const { user } = useAuthContext(); // 認証コンテキストからユーザー情報を取得
@@ -43,7 +44,7 @@ const Status = () => {
 
   const fetchUserData = async (userId) => {
     try {
-      const response = await fetch('https://www.pronavi.online/railsapp/api/v1/users/index'); // ユーザーデータを取得するAPI呼び出し
+      const response = await fetch('http://133.14.14.13/railsapp/api/v1/users/index'); // ユーザーデータを取得するAPI呼び出し
       const data = await response.json(); // レスポンスをJSON形式に変換
       const currentUser = data.find(u => u.User_id === userId); // ユーザーIDで一致するユーザーを検索
       if (currentUser) {
@@ -73,7 +74,7 @@ const Status = () => {
     if (user) {
       try {
         const statusId = getStatusId(statusDescription); // 状態の説明からIDを取得
-        const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/${user.uid}/schedules`, {
+        const response = await fetch(`http://133.14.14.13/railsapp/api/v1/users/${user.uid}/schedules`, {
           method: 'PATCH', // PATCHメソッドを使用してステータスを更新
           headers: {
             'Content-Type': 'application/json', // JSON形式のリクエストヘッダー
@@ -158,14 +159,15 @@ const Status = () => {
               key={index}
               onClick={() => updateStatus(status.description)}
               bg={status.color}
-              color="white"
+              color="black"
               width="120px"
               height="100px"
-              m="10px"
-              _hover={{ color: 'black' }}
+              m="20px"
+              _hover={{ color: 'green.500' }}
               className="status-button"
+              border="2px solid black" // ここでボタンを黒で縁取り
             >{/* state設定ボタンを表示 */}
-              {status.description}
+              <Text fontSize="25">{status.description}</Text>
             </Button>
           ))}
         </Flex>

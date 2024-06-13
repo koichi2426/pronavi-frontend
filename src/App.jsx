@@ -8,7 +8,7 @@ import Status from './pages/status';
 import Registration from './pages/registration';
 import Home from './pages/home';
 import Header from './components/Header';
-
+import Mailadress from './pages/mailadress';
 import './App.css';
 
 function App() {
@@ -35,6 +35,7 @@ function Main({ selectedFilter, setSelectedFilter }) {
           <Route path="/registration" element={<Registration />} />
           <Route path="/login" element={<Login />} />
           <Route path="/completion" element={<Completion />} />
+          <Route path="/mailadress" element={<Mailadress />} />
         </Routes>
       </Box>
     </Box>
