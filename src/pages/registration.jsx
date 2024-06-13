@@ -80,7 +80,7 @@ const Registration = () => {
 
   const sendUserDataToAPI = async (userId, userName, departmentId) => {
     try {
-      const response = await fetch('http://127.0.0.1:3001/register', {
+      const response = await fetch('https://www.pronavi.online/railsapp/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

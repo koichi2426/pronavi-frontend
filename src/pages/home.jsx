@@ -29,7 +29,7 @@ const Home = ({ selectedFilter }) => {
 
   useEffect(() => {
     // APIからユーザーリストを取得
-    fetch('http://133.14.14.13/railsapp/api/v1/users/index')
+    fetch('https://www.pronavi.online/railsapp/api/v1/users/index')
       .then(response => response.json()) // レスポンスをJSON形式に変換
       .then(data => setUsers(data)) // 取得したデータをusers状態にセット
       .catch(error => console.error('ユーザーの取得エラー:', error)); // エラーが発生した場合にコンソールに表示
@@ -38,9 +38,9 @@ const Home = ({ selectedFilter }) => {
   const handleButtonClick = () => {
     // ユーザーがログインしているかどうかで遷移先を変更
     if (user) {
-      window.location.assign('http://133.14.14.13/status'); // ログインしている場合はステータスページへ
+      window.location.assign('https://www.pronavi.online/status'); // ログインしている場合はステータスページへ
     } else {
-      window.location.assign('http://133.14.14.13/login'); // ログインしていない場合はログインページへ
+      window.location.assign('https://www.pronavi.online/login'); // ログインしていない場合はログインページへ
     }
   };
 
