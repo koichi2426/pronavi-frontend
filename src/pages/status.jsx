@@ -8,7 +8,7 @@ import { Box, Flex, Button, Text } from '@yamada-ui/react';
 
 const statusLegend = [
   { color: '#71BC78', description: '教授室', number: 1 }, // 淡い緑
-  { color: '#F48FB1', description: '不在', number: 2 }, // 淡いピンク
+  { color: '#F48FB1', description: '学内', number: 2 }, // 淡いピンク
   { color: '#FFB74D', description: '研究室', number: 3 }, // 淡いオレンジ
   { color: '#FFF176', description: '出張', number: 4 }, // 淡い黄色
   { color: '#64B5F6', description: '帰宅', number: 5 }, // 淡い青
@@ -136,11 +136,11 @@ const Status = () => {
         textAlign="center"
       >
         <Text fontSize="20">{userName && <p>Logged in as: <strong>{userName}</strong></p>}</Text> {/* ログインしているユーザー名を表示 */}
-        <Text fontSize="80">{userStatus !== '' && userStatus}</Text> {/* 現在のステータスを文字列で表示 */}
+        <Text fontSize="70">{userStatus !== '' && userStatus}</Text> {/* 現在のステータスを文字列で表示 */}
       </Box>
       <Box
         position="fixed"
-        top="400px"
+        top="600px"
         left="50%"
         transform="translate(-50%, -50%)"
         bg="gray.10"
