@@ -1,55 +1,71 @@
-import React, { useEffect, useState } from 'react'; // Reactライブラリと必要なフックをインポート
+import React, { useEffect, useState } from 'react';
 import { Text, Flex, Box } from '@yamada-ui/react';
-import { people } from '../data'; // データインポート
 import { useAuthContext } from '../context/AuthContext'; // 認証コンテキストをインポート
 
-const Home = ({ selectedFilter }) => {
+const UNIVERSITY_LATITUDE_RANGE = [35.981615, 35.988737];
+const UNIVERSITY_LONGITUDE_RANGE = [139.368220, 139.376497];
 
-  // ユーザー情報を保持するための状態と関数を定義
+const Home = ({ selectedFilter }) => {
   const [users, setUsers] = useState([]);
-  const { user } = useAuthContext(); // 認証コンテキストからユーザー情報を取得
+  const { user } = useAuthContext();
 
   useEffect(() => {
-    // ユーザーがログインしている場合の処理
+    fetch('https://www.pronavi.online/railsapp/api/v1/users/index')
+      .then(response => response.json())
+      .then(data => setUsers(data))
+      .catch(error => console.error('ユーザーの取得エラー:', error));
+  }, []);
+
+  useEffect(() => {
     if (user) {
-      console.log('現在のユーザー:', user); // コンソールにユーザー情報を表示
       if (user.uid) {
-        // ユーザーの位置情報を取得
         navigator.geolocation.getCurrentPosition(
           position => {
-            console.log('現在地の座標:', position.coords.latitude, position.coords.longitude); // コンソールに位置情報を表示
+            const { latitude, longitude } = position.coords;
+            if (
+              latitude >= UNIVERSITY_LATITUDE_RANGE[0] &&
+              latitude <= UNIVERSITY_LATITUDE_RANGE[1] &&
+              longitude >= UNIVERSITY_LONGITUDE_RANGE[0] &&
+              longitude <= UNIVERSITY_LONGITUDE_RANGE[1]
+            ) {
+              updateStatus(1);
+            } else {
+              updateStatus(4);
+            }
           },
           error => {
-            console.error('位置情報の取得エラー:', error); // 位置情報の取得エラーを表示
+            console.error('Error getting location:', error);
           }
         );
       }
     }
-  }, [user]); // userが変更されるたびにこのエフェクトが実行される
+  }, [user]);
 
-  useEffect(() => {
-    // APIからユーザーリストを取得
-    fetch('https://www.pronavi.online/railsapp/api/v1/users/index')
-      .then(response => response.json()) // レスポンスをJSON形式に変換
-      .then(data => setUsers(data)) // 取得したデータをusers状態にセット
-      .catch(error => console.error('ユーザーの取得エラー:', error)); // エラーが発生した場合にコンソールに表示
-  }, []); // このエフェクトはコンポーネントの初回レンダリング時に一度だけ実行される
-
-  const handleButtonClick = () => {
-    // ユーザーがログインしているかどうかで遷移先を変更
+  const updateStatus = async (statusId) => {
     if (user) {
-      window.location.assign('https://www.pronavi.online/status'); // ログインしている場合はステータスページへ
-    } else {
-      window.location.assign('https://www.pronavi.online/login'); // ログインしていない場合はログインページへ
+      try {
+        const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/${user.uid}/schedules`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            schedule: {
+              status_id: statusId,
+            },
+          }),
+        });
+        const result = await response.json();
+        if (!result.update) {
+          console.error('Failed to update status');
+        }
+      } catch (error) {
+        console.error('Error updating status:', error);
+      }
     }
   };
 
-
-
-
-
-  // フィルタリング
-  const filteredProfessors = people.filter(person => person.Department_id === selectedFilter);
+  const filteredProfessors = users.filter(user => user.Department_id.toString() === selectedFilter);
 
   const getStatusText = (status) => {
     switch (status) {
@@ -70,7 +86,6 @@ const Home = ({ selectedFilter }) => {
     }
   };
 
-  // 背景色
   const getBackgroundColor = (status) => {
     if (status === 5 || status === 4 || status === 6) {
       return 'gray.300';
@@ -91,10 +106,10 @@ const Home = ({ selectedFilter }) => {
           height="45px"
           borderRadius="25px"
           bg={getBackgroundColor(professor.Status_id)}
-          padding="0 8px" // paddingを追加
+          padding="0 8px"
         >
           <Text width="auto" maxWidth="116px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
-            {professor.username}
+            {professor.User_name}
           </Text>
           <Text ml="auto" fontWeight="bold">{getStatusText(professor.Status_id)}</Text>
         </Box>

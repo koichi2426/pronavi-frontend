@@ -5,13 +5,11 @@ import { Box, Flex, Heading, Spacer, Button, Input, Checkbox } from '@yamada-ui/
 const Header = ({ onFilterChange }) => {
   const [selectedFilter, setSelectedFilter] = useState('1'); // フィルタリングオプションの初期値を設定
 
-  // フィルタリングオプションが変更されたときの処理
   const handleFilterChange = (filter) => {
     setSelectedFilter(filter);
     onFilterChange(filter); // フィルターが変更されたときにコールバック関数を呼び出す
   };
 
-  // 部署のIDと表示名のマッピング
   const departmentMap = {
     '1': 'RU',
     '2': 'RB',
@@ -45,16 +43,7 @@ const Header = ({ onFilterChange }) => {
           </nav>
         </Flex>
       </Box>
-      {/* ステータスバー部分 */}
-      <Box
-        position="fixed"
-        top="55px"
-        w="100%"
-        bg="white"
-        p={1}
-        zIndex="999"
-        boxShadow="sm"
-      >
+      <Box position="fixed" top="55px" w="100%" bg="white" p={1} zIndex="999" boxShadow="sm">
         <Flex justify="space-around" wrap="wrap">
           {Object.entries(departmentMap).map(([id, name]) => (
             <Checkbox
@@ -67,11 +56,8 @@ const Header = ({ onFilterChange }) => {
           ))}
         </Flex>
       </Box>
-
-      <Box mt="2px" p={4}>
-      </Box>
     </Box>
   );
-}
+};
 
 export default Header;
