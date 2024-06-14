@@ -83,7 +83,7 @@ const Status = () => {
   const updateLocationStatus = async (universityBoolean) => {
     if (user) {
       try {
-        const response = await fetch(`http://127.0.0.1:3001/api/v1/users/locations`, {
+        const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/locations`, {
           method: 'PATCH', // PATCHメソッドを使用して位置情報を更新
           headers: {
             'Content-Type': 'application/json', // JSON形式のリクエストヘッダー
