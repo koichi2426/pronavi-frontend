@@ -28,9 +28,9 @@ const Home = ({ selectedFilter }) => {
               longitude >= UNIVERSITY_LONGITUDE_RANGE[0] &&
               longitude <= UNIVERSITY_LONGITUDE_RANGE[1]
             ) {
-              updateStatus(1);
+              updateStatus(1); // 大学内にいる場合
             } else {
-              updateStatus(4);
+              updateStatus(0); // 大学外にいる場合
             }
           },
           error => {
@@ -41,22 +41,23 @@ const Home = ({ selectedFilter }) => {
     }
   }, [user]);
 
-  const updateStatus = async (statusId) => {
+  const updateStatus = async (universityBoolean) => {
     if (user) {
       try {
-        const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/${user.uid}/schedules`, {
+        const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/locations`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            schedule: {
-              status_id: statusId,
+            user_id: user.uid,
+            location: {
+              university_boolean: universityBoolean.toString(),
             },
           }),
         });
         const result = await response.json();
-        if (!result.update) {
+        if (result.status !== 'success') {
           console.error('Failed to update status');
         }
       } catch (error) {
