@@ -13,8 +13,10 @@ const statusLegend = [
   { color: '#FFF176', description: '出張', number: 4 }, // 淡い黄色
   { color: '#64B5F6', description: '帰宅', number: 5 }, // 淡い青
   { color: '#B3E5FC', description: '対応不可', number: 6 }, // 淡い水色
-];
- //stateの色と場所の設定
+]; // stateの色と場所の設定
+
+const UNIVERSITY_LATITUDE_RANGE = [35.981615, 35.988737];
+const UNIVERSITY_LONGITUDE_RANGE = [139.368220, 139.376497];
 
 const Status = () => {
   const { user } = useAuthContext(); // 認証コンテキストからユーザー情報を取得
@@ -31,6 +33,14 @@ const Status = () => {
         navigator.geolocation.getCurrentPosition(
           position => {
             console.log('Current coordinates:', position.coords.latitude, position.coords.longitude); // コンソールに位置情報を表示
+            const universityBoolean =
+              position.coords.latitude >= UNIVERSITY_LATITUDE_RANGE[0] &&
+              position.coords.latitude <= UNIVERSITY_LATITUDE_RANGE[1] &&
+              position.coords.longitude >= UNIVERSITY_LONGITUDE_RANGE[0] &&
+              position.coords.longitude <= UNIVERSITY_LONGITUDE_RANGE[1]
+                ? 1
+                : 0;
+            updateLocationStatus(universityBoolean); // 位置情報のステータスを更新
           },
           error => {
             console.error('Error getting location:', error); // 位置情報の取得エラーを表示
@@ -67,6 +77,31 @@ const Status = () => {
       navigate('/'); // ログアウト後にホームページにリダイレクト
     } catch (error) {
       console.error('Error signing out:', error); // サインアウトエラーを表示
+    }
+  };
+
+  const updateLocationStatus = async (universityBoolean) => {
+    if (user) {
+      try {
+        const response = await fetch(`http://127.0.0.1:3001/api/v1/users/locations`, {
+          method: 'PATCH', // PATCHメソッドを使用して位置情報を更新
+          headers: {
+            'Content-Type': 'application/json', // JSON形式のリクエストヘッダー
+          },
+          body: JSON.stringify({
+            user_id: user.uid,
+            location: {
+              university_boolean: universityBoolean.toString(),
+            },
+          }),
+        });
+        const result = await response.json();
+        if (result.status !== 'success') {
+          console.error('Failed to update location status'); // 位置情報更新失敗メッセージ
+        }
+      } catch (error) {
+        console.error('Error updating location status:', error); // 位置情報更新エラーを表示
+      }
     }
   };
 
@@ -165,8 +200,8 @@ const Status = () => {
               m="20px"
               _hover={{ color: 'green.500' }}
               className="status-button"
-              border="2px solid black" // ここでボタンを黒で縁取り
-            >{/* state設定ボタンを表示 */}
+              border="2px solid black"
+            >
               <Text fontSize="25">{status.description}</Text>
             </Button>
           ))}
@@ -176,4 +211,4 @@ const Status = () => {
   );
 };
 
-export default Status; // このコンポーネントをエクスポートして他の場所で使用可能にする
+export default Status;
