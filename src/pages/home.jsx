@@ -28,8 +28,10 @@ const Home = ({ selectedFilter }) => {
               longitude >= UNIVERSITY_LONGITUDE_RANGE[0] &&
               longitude <= UNIVERSITY_LONGITUDE_RANGE[1]
             ) {
+              console.log("大学内");
               updateStatus(1); // 大学内にいる場合
             } else {
+              console.log("大学外");
               updateStatus(0); // 大学外にいる場合
             }
           },
