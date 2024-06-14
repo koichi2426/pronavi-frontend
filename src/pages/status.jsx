@@ -4,6 +4,9 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useAuthContext } from '../context/AuthContext';
 
+const UNIVERSITY_LATITUDE_RANGE = [35.981615, 35.988737];
+const UNIVERSITY_LONGITUDE_RANGE = [139.368220, 139.376497];
+
 const Status = () => {
   const { user } = useAuthContext();
   const navigate = useNavigate();
@@ -16,7 +19,23 @@ const Status = () => {
       if (user.uid) {
         navigator.geolocation.getCurrentPosition(
           position => {
-            console.log('Current coordinates:', position.coords.latitude, position.coords.longitude);
+            const { latitude, longitude } = position.coords;
+            console.log('Current coordinates:', latitude, longitude);
+
+            if (
+              latitude >= UNIVERSITY_LATITUDE_RANGE[0] &&
+              latitude <= UNIVERSITY_LATITUDE_RANGE[1] &&
+              longitude >= UNIVERSITY_LONGITUDE_RANGE[0] &&
+              longitude <= UNIVERSITY_LONGITUDE_RANGE[1]
+            ) {
+              // ユーザーが大学の範囲内にいる場合
+              console.log('ユーザーは大学の範囲内にいます。');
+              updateStatus(1); // ステータスを1に更新
+            } else {
+              // ユーザーが大学の範囲外にいる場合
+              console.log('ユーザーは大学の範囲外にいます。');
+              updateStatus(4); // ステータスを4に更新
+            }
           },
           error => {
             console.error('Error getting location:', error);
@@ -89,18 +108,18 @@ const Status = () => {
   if (!user) {
     return (
       <div>
-        <h1>Status Page</h1>
-        <div>Loading...</div>
+        <h1>ステータスページ</h1>
+        <div>読み込み中...</div>
       </div>
     );
   }
 
   return (
     <div>
-      <h1>Status Page</h1>
-      <p>This is the status page.</p>
-      {userName && <p>Logged in as: <strong>{userName}</strong></p>}
-      {userStatus && <p>Current status: <strong>{userStatus}</strong></p>}
+      <h1>ステータスページ</h1>
+      <p>これはステータスページです。</p>
+      {userName && <p>ログイン中: <strong>{userName}</strong></p>}
+      {userStatus && <p>現在のステータス: <strong>{userStatus}</strong></p>}
       <div>
         {[1, 2, 3, 4, 5, 6].map(statusId => (
           <button key={statusId} onClick={() => updateStatus(statusId)}>
