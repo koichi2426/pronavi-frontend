@@ -88,7 +88,7 @@ const Home = ({ selectedFilter }) => {
 
   const getBackgroundColor = (status) => {
     if (status === 5 || status === 4 || status === 6) {
-      return 'gray.300';
+      return 'gray.100';
     }
     return 'lightgreen';
   };
@@ -98,15 +98,21 @@ const Home = ({ selectedFilter }) => {
       {filteredProfessors.map((professor, index) => (
         <Box
           key={index}
-          mr={10}
-          mb={4}
+          mr={7}
+          mb={2}
           display="flex"
           alignItems="center"
-          width="200px"
-          height="45px"
+          width="250px"
+          height="50px"
           borderRadius="25px"
           bg={getBackgroundColor(professor.Status_id)}
-          padding="0 8px"
+          padding="0 20px"
+          sx={{
+            '@media (max-width: 600px)': {
+              width: '100%',
+              mr: 0,
+            },
+          }}
         >
           <Text width="auto" maxWidth="116px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
             {professor.User_name}
