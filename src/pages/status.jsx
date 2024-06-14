@@ -136,11 +136,11 @@ const Status = () => {
         textAlign="center"
       >
         <Text fontSize="20">{userName && <p>Logged in as: <strong>{userName}</strong></p>}</Text> {/* ログインしているユーザー名を表示 */}
-        <Text fontSize="80">{userStatus !== '' && userStatus}</Text> {/* 現在のステータスを文字列で表示 */}
+        <Text fontSize="70">{userStatus !== '' && userStatus}</Text> {/* 現在のステータスを文字列で表示 */}
       </Box>
       <Box
         position="fixed"
-        top="400px"
+        top="500px"
         left="50%"
         transform="translate(-50%, -50%)"
         bg="gray.10"
