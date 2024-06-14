@@ -72,6 +72,25 @@ const Home = () => {
     }
   };
 
+  const fetchUserData = async (userId) => {
+    try {
+      const response = await fetch('https://www.pronavi.online/railsapp/api/v1/users/index');
+      const data = await response.json();
+      const currentUser = data.find(u => u.User_id === userId);
+      if (currentUser) {
+        setUserName(currentUser.User_name);
+        setUserStatus(currentUser.Status_id);
+      } else {
+        setUserName('none');
+        setUserStatus('none');
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      setUserName('none');
+      setUserStatus('none');
+    }
+  };
+
   const updateStatus = async (statusId) => {
     if (user) {
       try {
@@ -98,7 +117,7 @@ const Home = () => {
       }
     }
   };
-  
+
   return (
     <div>
       <h1>ホームページ</h1>
