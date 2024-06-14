@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Flex, Heading, Spacer, Button, Input, Checkbox } from '@yamada-ui/react';
+import { useAuthContext } from '../context/AuthContext'; // 認証コンテキストをインポート
 
 const Header = ({ onFilterChange }) => {
+  const { user } = useAuthContext(); // 認証情報を取得
   const [selectedFilter, setSelectedFilter] = useState('1'); // フィルタリングオプションの初期値を設定
 
   const handleFilterChange = (filter) => {
@@ -37,7 +39,13 @@ const Header = ({ onFilterChange }) => {
             focusBorderColor="gray.500"
           />
           <nav>
-            <Button as={Link} to="/mailadress" variant="link" color="black" _hover={{ color: 'green.500' }}>
+            <Button
+              as={Link}
+              to={user ? "/status" : "/mailadress"} // ログイン状態によってリンク先を変更
+              variant="link"
+              color="black"
+              _hover={{ color: 'green.500' }}
+            >
               教授の方はこちら
             </Button>
           </nav>
