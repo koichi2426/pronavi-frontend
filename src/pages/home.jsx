@@ -1,9 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthContext } from '../context/AuthContext';
 
+const UNIVERSITY_LATITUDE_RANGE = [35.981615, 35.988737];
+const UNIVERSITY_LONGITUDE_RANGE = [139.368220, 139.376497];
+
 const Home = () => {
   const [users, setUsers] = useState([]);
   const { user } = useAuthContext();
+
+  useEffect(() => {
+    if (user) {
+      console.log('Logged in user:', user);
+      if (user.uid) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const { latitude, longitude } = position.coords;
+            console.log('Current coordinates:', latitude, longitude);
+
+            if (
+              latitude >= UNIVERSITY_LATITUDE_RANGE[0] &&
+              latitude <= UNIVERSITY_LATITUDE_RANGE[1] &&
+              longitude >= UNIVERSITY_LONGITUDE_RANGE[0] &&
+              longitude <= UNIVERSITY_LONGITUDE_RANGE[1]
+            ) {
+              // ユーザーが大学の範囲内にいる場合
+              console.log('ユーザーは大学の範囲内にいます。');
+              updateStatus(1); // ステータスを1に更新
+            } else {
+              // ユーザーが大学の範囲外にいる場合
+              console.log('ユーザーは大学の範囲外にいます。');
+              updateStatus(4); // ステータスを4に更新
+            }
+          },
+          error => {
+            console.error('Error getting location:', error);
+          }
+        );
+      }
+      fetchUserData(user.uid);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (user) {
@@ -36,6 +72,33 @@ const Home = () => {
     }
   };
 
+  const updateStatus = async (statusId) => {
+    if (user) {
+      try {
+        const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/${user.uid}/schedules`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            schedule: {
+              status_id: statusId,
+            },
+          }),
+        });
+        const result = await response.json();
+        if (result.update) {
+          console.log(`Status updated to ${statusId}`);
+          setUserStatus(statusId); // Update the local status
+        } else {
+          console.error('Failed to update status');
+        }
+      } catch (error) {
+        console.error('Error updating status:', error);
+      }
+    }
+  };
+  
   return (
     <div>
       <h1>ホームページ</h1>
