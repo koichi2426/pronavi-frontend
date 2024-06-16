@@ -35,7 +35,7 @@ const Registration = () => {
       const departmentId = getDepartmentId(department);
 
       // ユーザー情報をAPIに送信
-      const response = await sendUserDataToAPI(user.uid, username, departmentId);
+      const response = await sendUserDataToAPI(user.uid, username, departmentId, email);
 
       if (response.registration === true) {
         setMessage('ユーザー登録が成功しました');
@@ -78,7 +78,7 @@ const Registration = () => {
     return departments[department] || null;
   };
 
-  const sendUserDataToAPI = async (userId, userName, departmentId) => {
+  const sendUserDataToAPI = async (userId, userName, departmentId, mailaddress) => {
     try {
       const response = await fetch('https://www.pronavi.online/railsapp/register', {
         method: 'POST',
@@ -86,9 +86,10 @@ const Registration = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          User_id: userId,
-          User_name: userName,
-          Department_id: departmentId,
+          user_id: userId,
+          user_name: userName,
+          department_id: departmentId,
+          mailaddress: mailaddress, // メールアドレスを追加
         }),
       });
 
