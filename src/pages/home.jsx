@@ -8,6 +8,7 @@ const UNIVERSITY_LONGITUDE_RANGE = [139.368220, 139.376497];
 const Home = ({ selectedFilter }) => {
   const [users, setUsers] = useState([]);
   const { user } = useAuthContext();
+  const ipInfoApiKey = import.meta.env.VITE_IPINFO_API_KEY; // 環境変数からAPIキーを取得
 
   useEffect(() => {
     fetch('https://www.pronavi.online/railsapp/api/v1/users/index')
@@ -40,11 +41,12 @@ const Home = ({ selectedFilter }) => {
           }
         );
 
-        // IPアドレスを取得してコンソールに表示
+        // IPアドレスを取得してコンソールに表示し、VPNステータスを確認
         fetch('https://api.ipify.org?format=json')
           .then(response => response.json())
           .then(data => {
             console.log('IP Address:', data.ip); // コンソールに表示
+            checkVpnStatus(data.ip); // VPNステータスを確認
           })
           .catch(error => {
             console.error('Error fetching IP address:', error);
@@ -76,6 +78,21 @@ const Home = ({ selectedFilter }) => {
         console.error('Error updating status:', error);
       }
     }
+  };
+
+  const checkVpnStatus = (ip) => {
+    fetch(`https://ipinfo.io/${ip}/json?token=${ipInfoApiKey}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.hostname && data.hostname.includes('vpn')) {
+          console.log('VPN Status: Connected'); // VPN接続を表示
+        } else {
+          console.log('VPN Status: Not Connected'); // VPN非接続を表示
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching VPN status:', error);
+      });
   };
 
   const filteredProfessors = users.filter(user => user.Department_id.toString() === selectedFilter);
