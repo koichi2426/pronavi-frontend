@@ -175,7 +175,7 @@ const Status = () => {
       </Box>
       <Box
         position="fixed"
-        top="600px"
+        top="500px"
         left="50%"
         transform="translate(-50%, -50%)"
         bg="gray.10"
