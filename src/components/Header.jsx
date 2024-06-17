@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Flex, Heading, Spacer, Button, Input, Checkbox } from '@yamada-ui/react';
-import { useAuthContext } from '../context/AuthContext'; // 認証コンテキストをインポート
+import { Box, Flex, Heading, Spacer, Button, Input, Menu, MenuButton, MenuList, MenuItem, useMediaQuery } from '@yamada-ui/react';
+import { useAuthContext } from '../context/AuthContext';
 
 const Header = ({ onFilterChange }) => {
-  const { user } = useAuthContext(); // 認証情報を取得
-  const [selectedFilter, setSelectedFilter] = useState('1'); // フィルタリングオプションの初期値を設定
+  const { user } = useAuthContext();
+  const [selectedFilter, setSelectedFilter] = useState('1');
+  const [selectedDepartment, setSelectedDepartment] = useState('RU');
 
-  const handleFilterChange = (filter) => {
-    setSelectedFilter(filter);
-    onFilterChange(filter); // フィルターが変更されたときにコールバック関数を呼び出す
+  const handleFilterChange = (id, name) => {
+    setSelectedFilter(id);
+    setSelectedDepartment(name);
+    onFilterChange(id);
   };
 
   const departmentMap = {
@@ -22,6 +24,8 @@ const Header = ({ onFilterChange }) => {
     '7': 'RL'
   };
 
+  const [isLargerThan600] = useMediaQuery('(min-width: 600px)');
+
   return (
     <Box>
       <Box as="header" bg="orange.50" p={2} position="fixed" w="100%" top="0" zIndex="1000">
@@ -30,18 +34,11 @@ const Header = ({ onFilterChange }) => {
             Pronavi
           </Heading>
           <Spacer />
-          <Input
-            placeholder="名前検索"
-            maxW="300px"
-            mr={4}
-            variant="outline"
-            borderColor="gray.300"
-            focusBorderColor="gray.500"
-          />
+          
           <nav>
             <Button
               as={Link}
-              to={user ? "/status" : "/mailadress"} // ログイン状態によってリンク先を変更
+              to={user ? "/status" : "/mailadress"}
               variant="link"
               color="black"
               _hover={{ color: 'green.500' }}
@@ -51,17 +48,28 @@ const Header = ({ onFilterChange }) => {
           </nav>
         </Flex>
       </Box>
-      <Box position="fixed" top="55px" w="100%" bg="white" p={1} zIndex="999" boxShadow="sm">
-        <Flex justify="space-around" wrap="wrap">
-          {Object.entries(departmentMap).map(([id, name]) => (
-            <Checkbox
-              key={id}
-              isChecked={selectedFilter === id}
-              onChange={() => handleFilterChange(id)}
-            >
-              {name}
-            </Checkbox>
-          ))}
+      <Box position="fixed" top="60px" w="100%" bg="white" p={1} zIndex="999" boxShadow="sm">
+        <Flex justify={isLargerThan600 ? "space-around" : "space-between"} wrap="wrap">
+          <Input
+            placeholder="名前検索"
+            maxW={isLargerThan600 ? "300px" : "calc(100% - 130px)"}
+            mr={2}
+            variant="outline"
+            borderColor="gray.300"
+            focusBorderColor="gray.500"
+          />
+          <Menu>
+            <MenuButton as={Button} rightIcon="v">
+              {selectedDepartment}
+            </MenuButton>
+            <MenuList>
+              {Object.entries(departmentMap).map(([id, name]) => (
+                <MenuItem key={id} onClick={() => handleFilterChange(id, name)}>
+                  {name}
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
         </Flex>
       </Box>
       <Box mt="10px" p={4}>
