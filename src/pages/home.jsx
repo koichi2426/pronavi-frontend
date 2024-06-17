@@ -83,7 +83,7 @@ const Home = ({ selectedFilter }) => {
   const getStatusText = (status) => {
     switch (status) {
       case 1:
-        return '教授室';
+        return '教員室';
       case 2:
         return '学内';
       case 3:

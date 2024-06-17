@@ -7,7 +7,7 @@ import StHeader from '../components/StHeader';
 import { Box, Flex, Button, Text } from '@yamada-ui/react';
 
 const statusLegend = [
-  { color: '#71BC78', description: '教授室', number: 1 }, // 淡い緑
+  { color: '#71BC78', description: '教員室', number: 1 }, // 淡い緑
   { color: '#F48FB1', description: '学内', number: 2 }, // 淡いピンク
   { color: '#FFB74D', description: '研究室', number: 3 }, // 淡いオレンジ
   { color: '#FFF176', description: '出張', number: 4 }, // 淡い黄色
