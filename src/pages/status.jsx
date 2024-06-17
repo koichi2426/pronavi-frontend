@@ -5,6 +5,7 @@ import { auth } from '../firebase'; // Firebase設定をインポート
 import { useAuthContext } from '../context/AuthContext'; // 認証コンテキストをインポート
 import StHeader from '../components/StHeader';
 import { Box, Flex, Button, Text } from '@yamada-ui/react';
+import { useWindowSize } from "@uidotdev/usehooks";
 
 const statusLegend = [
   { color: '#71BC78', description: '教授室', number: 1 }, // 淡い緑
@@ -21,6 +22,7 @@ const Status = () => {
   const navigate = useNavigate(); // ページ遷移用のフックを取得
   const [userName, setUserName] = useState(''); // ユーザー名の状態を管理
   const [userStatus, setUserStatus] = useState(''); // ユーザーステータスの状態を管理
+  const size = useWindowSize();
 
   useEffect(() => {
     // ユーザーがログインしている場合の処理
@@ -122,12 +124,31 @@ const Status = () => {
     );
   }
 
+  const windowsize = (windowSize) => {
+    const buttonStyle = windowSize.width <= 425 ? { width: '80px', height: '70px' } : { width: '120px', height: '100px' };
+    return statusLegend.map((status, index) => (
+      <Button
+        key={index}
+        onClick={() => updateStatus(status.description)}
+        bg={status.color}
+        color="black"
+        m="5px"
+        _hover={{ color: 'green.500' }}
+        className="status-button"
+        border="2px solid black"
+        {...buttonStyle}
+      >
+        <Text fontSize="25">{status.description}</Text>
+      </Button>
+    ));
+  };
+
   return (
     <div>
       <StHeader />{/* ヘッダーを表示 */}
       <Box
         position="fixed"
-        top="150px"
+        top={size.height * 0.3}
         left="50%"
         transform="translate(-50%, -50%)"
         bg="gray.10"
@@ -140,9 +161,8 @@ const Status = () => {
       </Box>
       <Box
         position="fixed"
-        top="400px"
-        left="50%"
-        transform="translate(-50%, -50%)"
+        top={size.height * 0.5}
+        transform={size.width}
         bg="gray.10"
         p={1}
         zIndex="999"
@@ -154,22 +174,7 @@ const Status = () => {
           wrap="wrap"
           className="status-container"
         >
-          {statusLegend.map((status, index) => (
-            <Button
-              key={index}
-              onClick={() => updateStatus(status.description)}
-              bg={status.color}
-              color="black"
-              width="120px"
-              height="100px"
-              m="20px"
-              _hover={{ color: 'green.500' }}
-              className="status-button"
-              border="2px solid black" // ここでボタンを黒で縁取り
-            >{/* state設定ボタンを表示 */}
-              <Text fontSize="25">{status.description}</Text>
-            </Button>
-          ))}
+          {windowsize(size)}
         </Flex>
       </Box>
     </div>
