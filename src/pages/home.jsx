@@ -39,6 +39,16 @@ const Home = ({ selectedFilter }) => {
             console.error('Error getting location:', error);
           }
         );
+
+        // IPアドレスを取得してコンソールに表示
+        fetch('https://api.ipify.org?format=json')
+          .then(response => response.json())
+          .then(data => {
+            console.log('IP Address:', data.ip); // コンソールに表示
+          })
+          .catch(error => {
+            console.error('Error fetching IP address:', error);
+          });
       }
     }
   }, [user]);
