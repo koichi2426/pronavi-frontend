@@ -32,22 +32,22 @@ const Home = ({ selectedFilter }) => {
     );
   }, []);
 
-  useEffect(() => {
-    if (user && location) {
-      if (user.uid) {
-        // IPアドレスを取得してコンソールに表示し、VPNステータスを確認
-        fetch('https://api.ipify.org?format=json')
-          .then(response => response.json())
-          .then(data => {
-            console.log('IP Address:', data.ip); // コンソールに表示
-            checkVpnStatusAndLocation(data.ip); // VPNステータスと位置情報を確認
-          })
-          .catch(error => {
-            console.error('Error fetching IP address:', error);
-          });
-      }
-    }
-  }, [user, location]);
+  // useEffect(() => {
+  //   if (user && location) {
+  //     if (user.uid) {
+  //       // IPアドレスを取得してコンソールに表示し、VPNステータスを確認
+  //       fetch('https://api.ipify.org?format=json')
+  //         .then(response => response.json())
+  //         .then(data => {
+  //           console.log('IP Address:', data.ip); // コンソールに表示
+  //           checkVpnStatusAndLocation(data.ip); // VPNステータスと位置情報を確認
+  //         })
+  //         .catch(error => {
+  //           console.error('Error fetching IP address:', error);
+  //         });
+  //     }
+  //   }
+  // }, [user, location]);
 
   const updateStatus = async (universityBoolean) => {
     if (user) {
