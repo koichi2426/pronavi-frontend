@@ -80,35 +80,38 @@ const Home = ({ selectedFilter }) => {
       .then(data => {
         if (data && data.hostname && data.hostname.includes('vpn')) {
           console.log('VPN Status: Connected'); // VPN接続を表示
-          if (location) {
-            const { latitude, longitude } = location;
-            if (
-              latitude >= UNIVERSITY_LATITUDE_RANGE[0] &&
-              latitude <= UNIVERSITY_LATITUDE_RANGE[1] &&
-              longitude >= UNIVERSITY_LONGITUDE_RANGE[0] &&
-              longitude <= UNIVERSITY_LONGITUDE_RANGE[1]
-            ) {
-              console.log("大学内 (VPN接続)");
-              updateStatus(1); // 大学内にいる場合
-            } else {
-              console.log("大学外 (VPN接続)");
-              updateStatus(0); // 大学外にいる場合
-            }
-          }
+          checkLocationAndUpdateStatus();
         } else {
           console.log('VPN Status: Not Connected'); // VPN非接続を表示
           if (ip.startsWith('133.14')) {
             console.log("大学内");
             updateStatus(1); // 大学内にいる場合
           } else {
-            console.log("大学外");
-            updateStatus(0); // 大学外にいる場合
+            checkLocationAndUpdateStatus();
           }
         }
       })
       .catch(error => {
         console.error('Error fetching VPN status:', error);
       });
+  };
+
+  const checkLocationAndUpdateStatus = () => {
+    if (location) {
+      const { latitude, longitude } = location;
+      if (
+        latitude >= UNIVERSITY_LATITUDE_RANGE[0] &&
+        latitude <= UNIVERSITY_LATITUDE_RANGE[1] &&
+        longitude >= UNIVERSITY_LONGITUDE_RANGE[0] &&
+        longitude <= UNIVERSITY_LONGITUDE_RANGE[1]
+      ) {
+        console.log("大学内");
+        updateStatus(1); // 大学内にいる場合
+      } else {
+        console.log("大学外");
+        updateStatus(0); // 大学外にいる場合
+      }
+    }
   };
 
   const filteredProfessors = users.filter(user => user.Department_id.toString() === selectedFilter);
