@@ -33,7 +33,7 @@ const Home = ({ selectedFilter }) => {
   }, []);
 
   useEffect(() => {
-    if (user && location) {
+    if (user) {
       if (user.uid) {
         // IPアドレスを取得してコンソールに表示し、VPNステータスを確認
         fetch('https://api.ipify.org?format=json')
