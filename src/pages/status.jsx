@@ -23,6 +23,8 @@ const Status = () => {
   const navigate = useNavigate(); // ページ遷移用のフックを取得
   const [userName, setUserName] = useState(''); // ユーザー名の状態を管理
   const [userStatus, setUserStatus] = useState(''); // ユーザーステータスの状態を管理
+  const [location, setLocation] = useState(null);
+  const ipInfoApiKey = import.meta.env.VITE_IPINFO_API_KEY; // 環境変数からAPIキーを取得
 
   useEffect(() => {
     // ユーザーがログインしている場合の処理
@@ -145,6 +147,99 @@ const Status = () => {
   const getStatusId = (statusDescription) => {
     const status = statusLegend.find(s => s.description === statusDescription);
     return status ? status.number : -1;
+  };
+
+  useEffect(() => {
+    if (user) {
+      if (user.uid) {
+        // IPアドレスを取得してコンソールに表示し、VPNステータスを確認
+        fetch('https://api.ipify.org?format=json')
+          .then(response => response.json())
+          .then(data => {
+            console.log('IP Address:', data.ip); // コンソールに表示
+            checkVpnStatusAndLocation(data.ip); // VPNステータスと位置情報を確認
+          })
+          .catch(error => {
+            console.error('Error fetching IP address:', error);
+          });
+      }
+    }
+  }, [user, location]);
+
+  useEffect(() => {
+    // 位置情報を取得して状態に保存
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const { latitude, longitude } = position.coords;
+        setLocation({ latitude, longitude });
+        console.log('Location:', { latitude, longitude }); // 位置情報をコンソールに表示
+      },
+      error => {
+        console.error('Error getting location:', error);
+      }
+    );
+  }, []);
+
+  const checkVpnStatusAndLocation = (ip) => {
+    fetch(`https://ipinfo.io/${ip}/json?token=${ipInfoApiKey}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.hostname && data.hostname.includes('vpn')) {
+          console.log('VPN Status: Connected'); // VPN接続を表示
+          if (location) {
+            const { latitude, longitude } = location;
+            if (
+              latitude >= UNIVERSITY_LATITUDE_RANGE[0] &&
+              latitude <= UNIVERSITY_LATITUDE_RANGE[1] &&
+              longitude >= UNIVERSITY_LONGITUDE_RANGE[0] &&
+              longitude <= UNIVERSITY_LONGITUDE_RANGE[1]
+            ) {
+              console.log("大学内 (VPN接続)");
+              isIn(1); // 大学内にいる場合
+            } else {
+              console.log("大学外 (VPN接続)");
+              isIn(0); // 大学外にいる場合
+            }
+          }
+        } else {
+          console.log('VPN Status: Not Connected'); // VPN非接続を表示
+          if (ip.startsWith('133.14')) {
+            console.log("大学内");
+            isIn(1); // 大学内にいる場合
+          } else {
+            console.log("大学外");
+            isIn(0); // 大学外にいる場合
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching VPN status:', error);
+      });
+  };
+
+  const isIn = async (universityBoolean) => {
+    if (user) {
+      try {
+        const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/locations`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: user.uid,
+            location: {
+              university_boolean: universityBoolean.toString(),
+            },
+          }),
+        });
+        const result = await response.json();
+        if (result.status !== 'success') {
+          console.error('Failed to update status');
+        }
+      } catch (error) {
+        console.error('Error updating status:', error);
+      }
+    }
   };
 
   // ユーザーがログインしていない場合の表示
