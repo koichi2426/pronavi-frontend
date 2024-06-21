@@ -4,7 +4,7 @@ const Completion = () => {
   const downloadRef = useRef(null);
 
   useEffect(() => {
-    // Scroll to the download section after 2 seconds
+    // Scroll to the redirect section after 2 seconds
     const timer = setTimeout(() => {
       downloadRef.current.scrollIntoView({ behavior: 'smooth' });
     }, 2000);
@@ -21,11 +21,8 @@ const Completion = () => {
       <div style={styles.messageContainer}>
         <h1 style={styles.title}>登録完了</h1>
       </div>
-      <div ref={downloadRef} style={styles.downloadSection}>
-        <p style={styles.instruction}>こちらからこのサービスの使い方を説明したPDFをダウンロードできます:</p>
-        <a href="./../../pdf/guide.pdf" download style={styles.button}>
-          PDFをダウンロード
-        </a>
+      <div ref={downloadRef} style={styles.redirectSection}>
+        <p style={styles.instruction}>このサービスに移動するには、以下のボタンをクリックしてください:</p>
         <button onClick={handleRedirect} style={styles.button}>
           サービスに移動
         </button>
@@ -58,7 +55,7 @@ const styles = {
     textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)',
     textAlign: 'center',
   },
-  downloadSection: {
+  redirectSection: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -88,7 +85,6 @@ const styles = {
     transition: 'background-color 0.3s, box-shadow 0.3s',
     textAlign: 'center',
     cursor: 'pointer',
-    marginBottom: '20px', // To add some space between the buttons
     border: 'none', // Remove the border
   },
 };
