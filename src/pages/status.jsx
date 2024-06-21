@@ -193,7 +193,7 @@ const Status = () => {
           console.log('VPN Status: Not Connected'); // VPN非接続を表示
           if (ip.startsWith('133.14')) {
             console.log("大学内");
-            updateStatus(1); // 大学内にいる場合
+            isIn(1); // 大学内にいる場合
           } else {
             checkLocationAndUpdateStatus();
           }
@@ -214,10 +214,10 @@ const Status = () => {
         longitude <= UNIVERSITY_LONGITUDE_RANGE[1]
       ) {
         console.log("大学内");
-        updateStatus(1); // 大学内にいる場合
+        isIn(1); // 大学内にいる場合
       } else {
         console.log("大学外");
-        updateStatus(0); // 大学外にいる場合
+        isIn(0); // 大学外にいる場合
       }
     }
   };
@@ -307,22 +307,6 @@ const Status = () => {
           wrap="wrap"
           className="status-container"
         >
-          {statusLegend.map((status, index) => (
-            <Button
-              key={index}
-              onClick={() => updateStatus(status.description)}
-              bg={status.color}
-              color="black"
-              width="120px"
-              height="100px"
-              m="20px"
-              _hover={{ color: 'green.500' }}
-              className="status-button"
-              border="2px solid black"
-            >
-              <Text fontSize="25">{status.description}</Text>
-            </Button>
-          ))}
           {windowsize(size)}
         </Flex>
       </Box>
