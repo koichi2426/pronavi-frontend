@@ -5,7 +5,6 @@ import { auth } from '../firebase'; // Firebase設定をインポート
 import { useAuthContext } from '../context/AuthContext'; // 認証コンテキストをインポート
 import StHeader from '../components/StHeader';
 import { Box, Flex, Button, Text } from '@yamada-ui/react';
-import { useWindowSize } from "@uidotdev/usehooks";
 
 const statusLegend = [
   { color: '#71BC78', description: '教員室', number: 1 }, // 淡い緑
@@ -26,7 +25,6 @@ const Status = () => {
   const [userStatus, setUserStatus] = useState(''); // ユーザーステータスの状態を管理
   const [location, setLocation] = useState(null);
   const ipInfoApiKey = import.meta.env.VITE_IPINFO_API_KEY; // 環境変数からAPIキーを取得
-  const size = useWindowSize();
 
   useEffect(() => {
     // ユーザーがログインしている場合の処理
@@ -257,31 +255,12 @@ const Status = () => {
     );
   }
 
-  const windowsize = (windowSize) => {
-    const buttonStyle = windowSize.width <= 425 ? { width: '80px', height: '70px' } : { width: '120px', height: '100px' };
-    return statusLegend.map((status, index) => (
-      <Button
-        key={index}
-        onClick={() => updateStatus(status.description)}
-        bg={status.color}
-        color="black"
-        m="5px"
-        _hover={{ color: 'green.500' }}
-        className="status-button"
-        border="2px solid black"
-        {...buttonStyle}
-      >
-        <Text fontSize="25">{status.description}</Text>
-      </Button>
-    ));
-  };
-
   return (
     <div>
       <StHeader />{/* ヘッダーを表示 */}
       <Box
         position="fixed"
-        top={size.height * 0.3}
+        top="150px"
         left="50%"
         transform="translate(-50%, -50%)"
         bg="gray.10"
@@ -294,8 +273,9 @@ const Status = () => {
       </Box>
       <Box
         position="fixed"
-        top={size.height * 0.5}
-        transform={size.width}
+        top="500px"
+        left="50%"
+        transform="translate(-50%, -50%)"
         bg="gray.10"
         p={1}
         zIndex="999"
@@ -323,7 +303,6 @@ const Status = () => {
               <Text fontSize="25">{status.description}</Text>
             </Button>
           ))}
-          {windowsize(size)}
         </Flex>
       </Box>
     </div>
