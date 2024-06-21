@@ -18,7 +18,8 @@ const Mailadress = () => {
       });
 
       const data = await response.json();
-      return data.status === 0; // 0 means registered
+      console.log(data);
+      return data.status === 1; // 1 means registered
     } catch (error) {
       console.error('メールアドレスの確認中にエラーが発生しました', error);
       return false;
