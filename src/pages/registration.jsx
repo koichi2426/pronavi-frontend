@@ -186,6 +186,7 @@ const Registration = () => {
           </select>
         </div>
         <div style={styles.inputGroup}>
+          <p style={styles.locationDescription}>自動出勤機能のため、位置情報を取得します。</p>
           <label style={styles.label}>位置情報の取得を許可しますか？</label>
           <input
             name="locationPermission"
@@ -284,6 +285,12 @@ const styles = {
     width: '16px',
     height: '16px',
     marginTop: '10px',
+  },
+  locationDescription: {
+    fontSize: '14px',
+    color: '#555',
+    marginBottom: '10px',
+    textAlign: 'center',
   },
   buttonContainer: {
     display: 'flex',
