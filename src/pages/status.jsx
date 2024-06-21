@@ -1,110 +1,66 @@
-import React, { useEffect, useState } from 'react'; // Reactライブラリと必要なフックをインポート
-import { useNavigate } from 'react-router-dom'; // ルーティング用フックをインポート
-import { signOut } from 'firebase/auth'; // Firebaseの認証関連の関数をインポート
-import { auth } from '../firebase'; // Firebase設定をインポート
-import { useAuthContext } from '../context/AuthContext'; // 認証コンテキストをインポート
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebase';
+import { useAuthContext } from '../context/AuthContext';
 import StHeader from '../components/StHeader';
-import { Box, Flex, Button, Text } from '@yamada-ui/react';
+import { Box, Flex, Button, Text, Modal } from '@yamada-ui/react';
 import { useWindowSize } from "@uidotdev/usehooks";
 
 const statusLegend = [
-  { color: '#71BC78', description: '教員室', number: 1 }, // 淡い緑
-  { color: '#F48FB1', description: '学内', number: 2 }, // 淡いピンク
-  { color: '#FFB74D', description: '研究室', number: 3 }, // 淡いオレンジ
-  { color: '#FFF176', description: '出張', number: 4 }, // 淡い黄色
-  { color: '#64B5F6', description: '帰宅', number: 5 }, // 淡い青
-  { color: '#B3E5FC', description: '対応不可', number: 6 }, // 淡い水色
-]; // stateの色と場所の設定
+  { color: '#71BC78', description: '教員室', number: 1 },
+  { color: '#F48FB1', description: '学内', number: 2 },
+  { color: '#FFB74D', description: '研究室', number: 3 },
+  { color: '#FFF176', description: '出張', number: 4 },
+  { color: '#64B5F6', description: '帰宅', number: 5 },
+  { color: '#B3E5FC', description: '対応不可', number: 6 },
+];
 
 const UNIVERSITY_LATITUDE_RANGE = [35.981615, 35.988737];
 const UNIVERSITY_LONGITUDE_RANGE = [139.368220, 139.376497];
 
 const Status = () => {
-  const { user } = useAuthContext(); // 認証コンテキストからユーザー情報を取得
-  const navigate = useNavigate(); // ページ遷移用のフックを取得
-  const [userName, setUserName] = useState(''); // ユーザー名の状態を管理
-  const [userStatus, setUserStatus] = useState(''); // ユーザーステータスの状態を管理
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
+  const [userName, setUserName] = useState('');
+  const [userStatus, setUserStatus] = useState('');
   const [location, setLocation] = useState(null);
-  const ipInfoApiKey = import.meta.env.VITE_IPINFO_API_KEY; // 環境変数からAPIキーを取得
+  const ipInfoApiKey = import.meta.env.VITE_IPINFO_API_KEY;
   const size = useWindowSize();
+  const [isPopUpVisible, setPopUpVisible] = useState(false);
 
-  useEffect(() => {
-    // ユーザーがログインしている場合の処理
-    if (user) {
-      console.log('Logged in user:', user); // コンソールにユーザー情報を表示
-      if (user.uid) {
-        // ユーザーの位置情報を取得
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            console.log('Current coordinates:', position.coords.latitude, position.coords.longitude); // コンソールに位置情報を表示
-            const universityBoolean =
-              position.coords.latitude >= UNIVERSITY_LATITUDE_RANGE[0] &&
-              position.coords.latitude <= UNIVERSITY_LATITUDE_RANGE[1] &&
-              position.coords.longitude >= UNIVERSITY_LONGITUDE_RANGE[0] &&
-              position.coords.longitude <= UNIVERSITY_LONGITUDE_RANGE[1]
-                ? 1
-                : 0;
-            updateLocationStatus(universityBoolean); // 位置情報のステータスを更新
-          },
-          error => {
-            console.error('Error getting location:', error); // 位置情報の取得エラーを表示
-          }
-        );
-      }
-      // ユーザーデータを取得
-      fetchUserData(user.uid);
-    }
-  }, [user]); // userが変更されるたびにこのエフェクトが実行される
-
-  const fetchUserData = async (userId) => {
-    try {
-      const response = await fetch('https://www.pronavi.online/railsapp/api/v1/users/index'); // ユーザーデータを取得するAPI呼び出し
-      const data = await response.json(); // レスポンスをJSON形式に変換
-      const currentUser = data.find(u => u.User_id === userId); // ユーザーIDで一致するユーザーを検索
-      if (currentUser) {
-        setUserName(currentUser.User_name); // ユーザー名をセット
-        setUserStatus(getStatusDescription(currentUser.Status_id)); // ユーザーステータスをセット
-      } else {
-        setUserName('none'); // ユーザーが見つからなかった場合のデフォルト値
-        setUserStatus('none'); // ステータスが見つからなかった場合のデフォルト値
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error); // データ取得エラーを表示
-      setUserName('none'); // エラー時のデフォルト値
-      setUserStatus('none'); // エラー時のデフォルト値
-    }
+  const openModal = () => {
+    setPopUpVisible(true);
   };
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth); // Firebaseからサインアウト
-      navigate('/'); // ログアウト後にホームページにリダイレクト
-    } catch (error) {
-      console.error('Error signing out:', error); // サインアウトエラーを表示
-    }
+  const closeModal = () => {
+    setPopUpVisible(false);
   };
 
-  const updateLocationStatus = async (universityBoolean) => {
+  const updatejuststatus = async (statusDescription) => {
     if (user) {
       try {
-        const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/locations`, {
-          method: 'PATCH', // PATCHメソッドを使用して位置情報を更新
+        const statusId = getStatusId(statusDescription);
+        const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/${user.uid}/schedules`, {
+          method: 'PATCH',
           headers: {
-            'Content-Type': 'application/json', // JSON形式のリクエストヘッダー
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            user_id: user.uid,
-            location: {
-              university_boolean: universityBoolean.toString(),
+            schedule: {
+              status_id: statusId,
             },
           }),
         });
         const result = await response.json();
-        if (result.status !== 'success') {
-          console.error('Failed to update location status'); // 位置情報更新失敗メッセージ
+        if (result.update) {
+          console.log(`Status updated to ${statusDescription}`);
+          setUserStatus(statusDescription);
+        } else {
+          console.error('Failed to update status');
         }
       } catch (error) {
-        console.error('Error updating location status:', error); // 位置情報更新エラーを表示
+        console.error('Error updating status:', error);
       }
     }
   };
@@ -112,33 +68,37 @@ const Status = () => {
   const updateStatus = async (statusDescription) => {
     if (user) {
       try {
-        const statusId = getStatusId(statusDescription); // 状態の説明からIDを取得
-        const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/${user.uid}/schedules`, {
-          method: 'PATCH', // PATCHメソッドを使用してステータスを更新
-          headers: {
-            'Content-Type': 'application/json', // JSON形式のリクエストヘッダー
-          },
-          body: JSON.stringify({
-            schedule: {
-              status_id: statusId, // 更新するステータスID
-            },
-          }),
-        });
-        const result = await response.json(); // レスポンスをJSON形式に変換
-        if (result.update) {
-          console.log(`Status updated to ${statusDescription}`); // ステータス更新成功メッセージ
-          setUserStatus(statusDescription); // ローカルのステータスを更新
+        if (statusDescription === "帰宅") {
+          openModal(); // 研究室の場合はポップアップを表示
         } else {
-          console.error('Failed to update status'); // ステータス更新失敗メッセージ
+          const statusId = getStatusId(statusDescription);
+          const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/${user.uid}/schedules`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              schedule: {
+                status_id: statusId,
+              },
+            }),
+          });
+          const result = await response.json();
+          if (result.update) {
+            console.log(`Status updated to ${statusDescription}`);
+            setUserStatus(statusDescription);
+          } else {
+            console.error('Failed to update status');
+          }
         }
       } catch (error) {
-        console.error('Error updating status:', error); // ステータス更新エラーを表示
+        console.error('Error updating status:', error);
       }
     }
   };
 
   const handleHomeClick = () => {
-    window.location.href = '/'; // ホームページに移動
+    window.location.href = '/';
   };
 
   const getStatusDescription = (statusId) => {
@@ -153,13 +113,90 @@ const Status = () => {
 
   useEffect(() => {
     if (user) {
+      console.log('Logged in user:', user);
       if (user.uid) {
-        // IPアドレスを取得してコンソールに表示し、VPNステータスを確認
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            console.log('Current coordinates:', position.coords.latitude, position.coords.longitude);
+            const universityBoolean =
+              position.coords.latitude >= UNIVERSITY_LATITUDE_RANGE[0] &&
+              position.coords.latitude <= UNIVERSITY_LATITUDE_RANGE[1] &&
+              position.coords.longitude >= UNIVERSITY_LONGITUDE_RANGE[0] &&
+              position.coords.longitude <= UNIVERSITY_LONGITUDE_RANGE[1]
+                ? 1
+                : 0;
+            updateLocationStatus(universityBoolean);
+          },
+          error => {
+            console.error('Error getting location:', error);
+          }
+        );
+      }
+      fetchUserData(user.uid);
+    }
+  }, [user]);
+
+  const fetchUserData = async (userId) => {
+    try {
+      const response = await fetch('https://www.pronavi.online/railsapp/api/v1/users/index');
+      const data = await response.json();
+      const currentUser = data.find(u => u.User_id === userId);
+      if (currentUser) {
+        setUserName(currentUser.User_name);
+        setUserStatus(getStatusDescription(currentUser.Status_id));
+      } else {
+        setUserName('none');
+        setUserStatus('none');
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      setUserName('none');
+      setUserStatus('none');
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+  const updateLocationStatus = async (universityBoolean) => {
+    if (user) {
+      try {
+        const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/locations`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: user.uid,
+            location: {
+              university_boolean: universityBoolean.toString(),
+            },
+          }),
+        });
+        const result = await response.json();
+        if (result.status !== 'success') {
+          console.error('Failed to update location status');
+        }
+      } catch (error) {
+        console.error('Error updating location status:', error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      if (user.uid) {
         fetch('https://api.ipify.org?format=json')
           .then(response => response.json())
           .then(data => {
-            console.log('IP Address:', data.ip); // コンソールに表示
-            checkVpnStatusAndLocation(data.ip); // VPNステータスと位置情報を確認
+            console.log('IP Address:', data.ip);
+            checkVpnStatusAndLocation(data.ip);
           })
           .catch(error => {
             console.error('Error fetching IP address:', error);
@@ -169,12 +206,11 @@ const Status = () => {
   }, [user, location]);
 
   useEffect(() => {
-    // 位置情報を取得して状態に保存
     navigator.geolocation.getCurrentPosition(
       position => {
         const { latitude, longitude } = position.coords;
         setLocation({ latitude, longitude });
-        console.log('Location:', { latitude, longitude }); // 位置情報をコンソールに表示
+        console.log('Location:', { latitude, longitude });
       },
       error => {
         console.error('Error getting location:', error);
@@ -187,13 +223,13 @@ const Status = () => {
       .then(response => response.json())
       .then(data => {
         if (data && data.hostname && data.hostname.includes('vpn')) {
-          console.log('VPN Status: Connected'); // VPN接続を表示
+          console.log('VPN Status: Connected');
           checkLocationAndUpdateStatus();
         } else {
-          console.log('VPN Status: Not Connected'); // VPN非接続を表示
+          console.log('VPN Status: Not Connected');
           if (ip.startsWith('133.14')) {
             console.log("大学内");
-            isIn(1); // 大学内にいる場合
+            isIn(1);
           } else {
             checkLocationAndUpdateStatus();
           }
@@ -214,10 +250,10 @@ const Status = () => {
         longitude <= UNIVERSITY_LONGITUDE_RANGE[1]
       ) {
         console.log("大学内");
-        isIn(1); // 大学内にいる場合
+        isIn(1);
       } else {
         console.log("大学外");
-        isIn(0); // 大学外にいる場合
+        isIn(0);
       }
     }
   };
@@ -247,7 +283,6 @@ const Status = () => {
     }
   };
 
-  // ユーザーがログインしていない場合の表示
   if (!user) {
     return (
       <div>
@@ -257,8 +292,9 @@ const Status = () => {
     );
   }
 
+  const buttonStyle = size.width <= 425 ? { width: '80px', height: '70px' } : { width: '120px', height: '100px' };
+
   const windowsize = (windowSize) => {
-    const buttonStyle = windowSize.width <= 425 ? { width: '80px', height: '70px' } : { width: '120px', height: '100px' };
     return statusLegend.map((status, index) => (
       <Button
         key={index}
@@ -278,7 +314,7 @@ const Status = () => {
 
   return (
     <div>
-      <StHeader />{/* ヘッダーを表示 */}
+      <StHeader />
       <Box
         position="fixed"
         top={size.height * 0.3}
@@ -286,11 +322,11 @@ const Status = () => {
         transform="translate(-50%, -50%)"
         bg="gray.10"
         p={1}
-        zIndex="999"
+        zIndex="100"
         textAlign="center"
       >
-        <Text fontSize="20">{userName && <p>Logged in as: <strong>{userName}</strong></p>}</Text> {/* ログインしているユーザー名を表示 */}
-        <Text fontSize="70">{userStatus !== '' && userStatus}</Text> {/* 現在のステータスを文字列で表示 */}
+        <Text fontSize="20">{userName && <p>Logged in as: <strong>{userName}</strong></p>}</Text>
+        <Text fontSize="70">{userStatus !== '' && userStatus}</Text>
       </Box>
       <Box
         position="fixed"
@@ -298,7 +334,7 @@ const Status = () => {
         transform={size.width}
         bg="gray.10"
         p={1}
-        zIndex="999"
+        zIndex="100"
         width="100%"
       >
         <Flex
@@ -310,6 +346,18 @@ const Status = () => {
           {windowsize(size)}
         </Flex>
       </Box>
+      <Modal isOpen={isPopUpVisible} onClose={closeModal} zIndex="1000">
+        <Box p={4} textAlign="center">
+          <Text color="red" fontWeight="bold">WORNING!!</Text>
+          <p>ステータスを変更しますか？</p>
+          <p>変更すると翌日の0時まで変更することができません</p>
+          <Flex justify="center" mt={4}>
+            <Button onClick={() => { updatejuststatus('帰宅'); closeModal(); }} mr={35}>YES</Button>
+            <Button onClick={closeModal} ml={2}>NO</Button>
+          </Flex>
+        </Box>
+      </Modal>
+
     </div>
   );
 };
