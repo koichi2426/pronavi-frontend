@@ -6,6 +6,7 @@ import emailjs from 'emailjs-com';
 const Mailadress = () => {
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const checkEmailRegistered = async (email) => {
     try {
@@ -43,9 +44,11 @@ const Mailadress = () => {
       )
         .then((response) => {
           console.log('メールが送信されました', response.status, response.text);
+          setSuccessMessage('メールが送信されました。');
         })
         .catch((error) => {
           console.error('メールの送信に失敗しました', error);
+          setErrorMessage('メールの送信に失敗しました。');
         });
     } else {
       console.log('メールアドレスは登録されていません。メールを送信しません。');
@@ -103,6 +106,9 @@ const Mailadress = () => {
         </form>
         {errorMessage && (
           <Text color="red" mt={4}>{errorMessage}</Text>
+        )}
+        {successMessage && (
+          <Text color="green" mt={4}>{successMessage}</Text>
         )}
       </Box>
     </div>
