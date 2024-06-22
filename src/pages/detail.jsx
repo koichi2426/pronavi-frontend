@@ -16,7 +16,7 @@ const Detail = () => {
         </Box>
         <hr className="gray-line" />
         <Box mt={4}>
-          <Text className="text-xl-custom">ホームボタンに追加する。</Text>
+          <Text className="text-xl-custom">ホーム画面に追加する。</Text>
           <Text className="text-2xl-custom">1.フッター中央にある📤を押します。</Text>
           <Image 
             src={des1Image} 
