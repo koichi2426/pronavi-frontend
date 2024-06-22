@@ -28,7 +28,7 @@ const Detail = () => {
           />
         </Box>
         <Box mt={4}>
-          <Text className="text-2xl-custom">2.下にスクロールし、「ホームボタンに追加」を選択します。</Text>
+          <Text className="text-2xl-custom">2.下にスクロールし、「ホーム画面に追加」を選択します。</Text>
           <Image 
             src={des2Image} 
             alt="description2"
