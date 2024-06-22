@@ -7,6 +7,7 @@ const Mailadress = () => {
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // スピナーの状態を追加
 
   const checkEmailRegistered = async (email) => {
     try {
@@ -29,6 +30,7 @@ const Mailadress = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // スピナーを表示
     const message = '以下はログイン用URLです。\nhttps://www.pronavi.online/login';
 
     const isRegistered = await checkEmailRegistered(email);
@@ -56,6 +58,7 @@ const Mailadress = () => {
     }
 
     setEmail('');
+    setIsLoading(false); // スピナーを非表示
   };
 
   return (
@@ -99,8 +102,9 @@ const Mailadress = () => {
               bg="#64B5F6"
               color="black"
               border="1px solid black"
+              disabled={isLoading} // スピナーが表示されている間はボタンを無効化
             >
-              送信
+              {isLoading ? <div className="spinner"></div> : '送信'}
             </Button>
           </Flex>
         </form>
@@ -111,6 +115,25 @@ const Mailadress = () => {
           <Text color="green" mt={4}>{successMessage}</Text>
         )}
       </Box>
+      <style jsx>{`
+        .spinner {
+          border: 4px solid rgba(0, 0, 0, 0.1);
+          border-left-color: #64B5F6;
+          border-radius: 50%;
+          width: 24px;
+          height: 24px;
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 };
