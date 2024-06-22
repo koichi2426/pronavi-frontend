@@ -12,7 +12,7 @@ const Detail = () => {
       <Box p={4} mt="50px">
         <Box mt={4}>
           <Text className="text-lg-custom">アプリを利用する前に。</Text>
-          <Text className="text-2xl-custom">アプリをホームボタンに追加し、すぐに使えるようにしましょう。</Text>
+          <Text className="text-2xl-custom">アプリをホーム画面に追加し、すぐに使えるようにしましょう。</Text>
         </Box>
         <hr className="gray-line" />
         <Box mt={4}>
