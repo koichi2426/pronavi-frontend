@@ -352,8 +352,8 @@ const Status = () => {
           <p>ステータスを変更しますか？</p>
           <p>変更すると翌日の0時まで変更することができません</p>
           <Flex justify="center" mt={4}>
-            <Button onClick={() => { updatejuststatus('帰宅'); closeModal(); }} mr={35}>NO</Button>
-            <Button onClick={closeModal} ml={2}>YES</Button>
+            <Button onClick={() => { updatejuststatus('帰宅'); closeModal(); }} mr={35}>YES</Button>
+            <Button onClick={closeModal} ml={2}>NO</Button>
           </Flex>
         </Box>
       </Modal>
