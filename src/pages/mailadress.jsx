@@ -86,7 +86,7 @@ const Mailadress = () => {
         zIndex="10"
         textAlign="center"
       >
-        <Text fontSize="20">メール送信ページ</Text>
+        <Text fontSize="20">登録済みメールアドレスを入力してください。</Text>
       </Box>
       <Box
         position="fixed"
