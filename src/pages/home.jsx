@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Text, Flex, Box } from '@yamada-ui/react';
-import { useAuthContext } from '../context/AuthContext'; // 認証コンテキストをインポート
+import { useAuthContext } from '../context/AuthContext';
+import Header from '../components/Header';
 
 const UNIVERSITY_LATITUDE_RANGE = [35.981615, 35.988737];
 const UNIVERSITY_LONGITUDE_RANGE = [139.368220, 139.376497];
 
-const Home = ({ selectedFilter }) => {
+const Home = () => {
   const [users, setUsers] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState('1');
+  const [searchQuery, setSearchQuery] = useState('');
   const { user } = useAuthContext();
 
   useEffect(() => {
@@ -78,8 +81,6 @@ const Home = ({ selectedFilter }) => {
     }
   };
 
-  const filteredProfessors = users.filter(user => user.Department_id.toString() === selectedFilter);
-
   const getStatusText = (status) => {
     switch (status) {
       case 1:
@@ -106,34 +107,52 @@ const Home = ({ selectedFilter }) => {
     return 'lightgreen';
   };
 
+  const handleFilterChange = (filter) => {
+    setSelectedFilter(filter);
+  };
+
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+  };
+
+  const filteredProfessors = users.filter((user) => {
+    if (searchQuery) {
+      return user.User_name.toLowerCase().includes(searchQuery.toLowerCase());
+    }
+    return user.Department_id.toString() === selectedFilter;
+  });
+
   return (
-    <Flex flexWrap="wrap" p={6}>
-      {filteredProfessors.map((professor, index) => (
-        <Box
-          key={index}
-          mr={7}
-          mb={2}
-          display="flex"
-          alignItems="center"
-          width="250px"
-          height="50px"
-          borderRadius="25px"
-          bg={getBackgroundColor(professor.Status_id)}
-          padding="0 20px"
-          sx={{
-            '@media (max-width: 600px)': {
-              width: '100%',
-              mr: 0,
-            },
-          }}
-        >
-          <Text width="auto" maxWidth="116px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
-            {professor.User_name}
-          </Text>
-          <Text ml="auto" fontWeight="bold">{getStatusText(professor.Status_id)}</Text>
-        </Box>
-      ))}
-    </Flex>
+    <>
+      <Header onFilterChange={handleFilterChange} onSearch={handleSearchChange} />
+      <Flex flexWrap="wrap" p={6}>
+        {filteredProfessors.map((professor, index) => (
+          <Box
+            key={index}
+            mr={7}
+            mb={2}
+            display="flex"
+            alignItems="center"
+            width="250px"
+            height="50px"
+            borderRadius="25px"
+            bg={getBackgroundColor(professor.Status_id)}
+            padding="0 20px"
+            sx={{
+              '@media (max-width: 600px)': {
+                width: '100%',
+                mr: 0,
+              },
+            }}
+          >
+            <Text width="auto" maxWidth="116px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+              {professor.User_name}
+            </Text>
+            <Text ml="auto" fontWeight="bold">{getStatusText(professor.Status_id)}</Text>
+          </Box>
+        ))}
+      </Flex>
+    </>
   );
 };
 
