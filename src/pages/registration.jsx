@@ -12,15 +12,15 @@ const Registration = () => {
   const [message, setMessage] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [locationPermission, setLocationPermission] = useState(false);
 
   useEffect(() => {
-    // 全てのフィールドが埋まっているか確認
-    if (email && password && confirmPassword && username && department) {
+    if (email && password && confirmPassword && username && department && locationPermission) {
       setIsFormValid(true);
     } else {
       setIsFormValid(false);
     }
-  }, [email, password, confirmPassword, username, department]);
+  }, [email, password, confirmPassword, username, department, locationPermission]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -34,13 +34,25 @@ const Registration = () => {
       const user = userCredential.user;
       const departmentId = getDepartmentId(department);
 
-      // ユーザー情報をAPIに送信
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            console.log('位置情報:', latitude, longitude);
+          },
+          (error) => {
+            console.error('位置情報取得エラー:', error);
+          }
+        );
+      } else {
+        console.error('ブラウザは位置情報取得をサポートしていません');
+      }
+
       const response = await sendUserDataToAPI(user.uid, username, departmentId, email);
 
       if (response.registration === true) {
         setMessage('ユーザー登録が成功しました');
-        // /completion へリダイレクト
-        window.location.href = '/completion'; // completionがリダイレクト先のルートであると仮定
+        window.location.href = '/completion';
       } else {
         setError('ユーザー登録に失敗しました');
       }
@@ -73,6 +85,10 @@ const Registration = () => {
     setDepartment(event.currentTarget.value);
   };
 
+  const handleChangeLocationPermission = (event) => {
+    setLocationPermission(event.currentTarget.checked);
+  };
+
   const getDepartmentId = (department) => {
     const departments = { RU: 1, RB: 2, RD: 3, RE: 4, RM: 5, RG: 6 };
     return departments[department] || null;
@@ -89,7 +105,7 @@ const Registration = () => {
           user_id: userId,
           user_name: userName,
           department_id: departmentId,
-          mailaddress: mailaddress, // メールアドレスを追加
+          mailaddress: mailaddress,
         }),
       });
 
@@ -98,7 +114,7 @@ const Registration = () => {
       }
 
       const data = await response.json();
-      console.log('API応答:', data); // APIのレスポンスデータをコンソールに表示
+      console.log('API応答:', data);
       return data;
     } catch (error) {
       console.error('ユーザーデータ送信エラー:', error);
@@ -169,8 +185,27 @@ const Registration = () => {
             <option value="RG">RG</option>
           </select>
         </div>
+        <div style={styles.inputGroup}>
+          <p style={styles.locationDescription}>自動出勤機能のため、位置情報を取得します。</p>
+          <label style={styles.label}>位置情報の取得を許可しますか？</label>
+          <input
+            name="locationPermission"
+            type="checkbox"
+            checked={locationPermission}
+            onChange={handleChangeLocationPermission}
+            style={styles.checkbox}
+          />
+        </div>
         <div style={styles.buttonContainer}>
-          <button type="submit" style={{ ...styles.button, opacity: isFormValid ? 1 : 0.6, cursor: isFormValid ? 'pointer' : 'not-allowed' }} disabled={!isFormValid || loading}>
+          <button
+            type="submit"
+            style={{
+              ...styles.button,
+              opacity: isFormValid ? 1 : 0.6,
+              cursor: isFormValid ? 'pointer' : 'not-allowed'
+            }}
+            disabled={!isFormValid || loading}
+          >
             {loading ? <div style={styles.spinner}></div> : '登録'}
           </button>
         </div>
@@ -246,6 +281,17 @@ const styles = {
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
     transition: 'border-color 0.3s, box-shadow 0.3s',
   },
+  checkbox: {
+    width: '16px',
+    height: '16px',
+    marginTop: '10px',
+  },
+  locationDescription: {
+    fontSize: '14px',
+    color: '#555',
+    marginBottom: '10px',
+    textAlign: 'center',
+  },
   buttonContainer: {
     display: 'flex',
     justifyContent: 'center',
@@ -283,7 +329,6 @@ const globalStyles = `
   }
 `;
 
-// スタイルをドキュメントヘッドに追加
 const styleSheet = document.createElement("style");
 styleSheet.type = "text/css";
 styleSheet.innerText = globalStyles;
