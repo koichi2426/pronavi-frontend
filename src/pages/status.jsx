@@ -4,7 +4,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useAuthContext } from '../context/AuthContext';
 import StHeader from '../components/StHeader';
-import { Box, Flex, Button, Text, Modal } from '@yamada-ui/react';
+import { Box, Flex, Button, Text, Modal, Input } from '@yamada-ui/react';
 import { useWindowSize } from "@uidotdev/usehooks";
 
 const statusLegend = [
@@ -28,6 +28,7 @@ const Status = () => {
   const ipInfoApiKey = import.meta.env.VITE_IPINFO_API_KEY;
   const size = useWindowSize();
   const [isPopUpVisible, setPopUpVisible] = useState(false);
+  const [statusText, setStatusText] = useState('');
 
   {/* ポップアップメニューの開閉 */}
   const openModal = () => {
@@ -51,6 +52,7 @@ const Status = () => {
           body: JSON.stringify({
             schedule: {
               status_id: statusId,
+              remarks: statusText, // 備考を追加
             },
           }),
         });
@@ -64,6 +66,7 @@ const Status = () => {
       } catch (error) {
         console.error('Error updating status:', error);
       }
+      setStatusText(''); // 備考のリセット
     }
   };
 
@@ -83,6 +86,7 @@ const Status = () => {
             body: JSON.stringify({
               schedule: {
                 status_id: statusId,
+                remarks: statusText, // 備考を追加
               },
             }),
           });
@@ -97,6 +101,7 @@ const Status = () => {
       } catch (error) {
         console.error('Error updating status:', error);
       }
+      setStatusText(''); // 備考のリセット
     }
   };
 
@@ -264,7 +269,7 @@ const Status = () => {
   const isIn = async (universityBoolean) => {
     if (user) {
       try {
-        const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/locations`, {
+        const response = await fetch('https://www.pronavi.online/railsapp/api/v1/users/locations', {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -272,12 +277,14 @@ const Status = () => {
           body: JSON.stringify({
             user_id: user.uid,
             location: {
-              university_boolean: universityBoolean.toString(),
+              university_boolean: universityBoolean,
             },
           }),
         });
-        const result = await response.json();
-        if (result.status !== 'success') {
+        const data = await response.json();
+        if (data.status === 'success') {
+          console.log('Status updated successfully');
+        } else {
           console.error('Failed to update status');
         }
       } catch (error) {
@@ -294,11 +301,10 @@ const Status = () => {
       </div>
     );
   }
-  {/* 文字サイズの変更 */}
+
   const buttonStyle = size.width <= 425 ? { width: '80px', height: '70px' } : { width: '120px', height: '100px' };
   const textsize = size.width <= 425 ? '38px' : '70px';
 
-  {/* ボタン表示の関数 */}
   const windowsize = (windowSize) => {
     return statusLegend.map((status, index) => (
       <Button
@@ -321,7 +327,6 @@ const Status = () => {
     <div>
       <StHeader />
 
-      {/* ステータスの表示 */}
       <Box
         position="fixed"
         top={size.height * 0.3}
@@ -335,7 +340,25 @@ const Status = () => {
         <Text fontSize={textsize}>{userStatus !== '' && userStatus}</Text>
       </Box>
 
-      {/* ボタンの表示 */}
+      <Box
+        position="fixed"
+        top={size.height * 0.45}
+        left="50%"
+        transform="translate(-50%, -50%)"
+        bg="white"
+        p={1}
+        zIndex="100"
+        textAlign="center"
+      >
+        <Input
+          type="text"
+          placeholder="備考"
+          bg="white"
+          value={statusText}
+          onChange={(e) => setStatusText(e.target.value)}
+        />
+      </Box>
+
       <Box
         position="fixed"
         top={size.height * 0.5}
@@ -355,7 +378,6 @@ const Status = () => {
         </Flex>
       </Box>
 
-      {/* ポップアップメニュー */}
       <Modal isOpen={isPopUpVisible} onClose={closeModal} zIndex="1000">
         <Box p={4} textAlign="center">
           <Text color="red" fontWeight="bold">WARNING!!</Text>
