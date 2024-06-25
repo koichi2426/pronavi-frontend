@@ -1,10 +1,12 @@
-import React from 'react'
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
-import { Box, Flex, Heading, Spacer, Button,Text} from '@yamada-ui/react';
+import { Box, Flex, Heading, Spacer, Button, Text } from '@yamada-ui/react';
 
 const StHeader = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -15,26 +17,35 @@ const StHeader = () => {
     }
   };
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    
-      <Box as="header" bg="orange.50" p={2} position="fixed" w="100%" top="0" zIndex="1000">
-        <Flex align="center">
-          <Heading as="h3" size="lg">
-            Pronavi
-          </Heading>   
-          <Spacer />
+    <Box as="header" bg="orange.50" p={2} position="fixed" w="100%" top="0" zIndex="1000">
+      <Flex align="center">
+        <Heading as="h3" size="lg">
+          Pronavi
+        </Heading>
+        <Spacer />
+        <Button variant="outline" onClick={toggleMenu}>
+          ☰
+        </Button>
+      </Flex>
+      {isMenuOpen && (
+        <Box mt={2} textAlign="right">
           <nav>
-            <Button onClick={handleLogout} as={Link} to="/" variant="link" color = "black" _hover = {{ color: 'green.500' }} mr={5}>
+            <Button onClick={handleLogout} as={Link} to="/" variant="link" color="black" _hover={{ color: 'green.500' }} display="block" mb={2}>
               ログアウト
-            </Button >
-            
-            <Button as={Link} to="/" variant="link" color="black" _hover={{ color: 'green.500' }}>
+            </Button>
+            <Button as={Link} to="/" variant="link" color="black" _hover={{ color: 'green.500' }} display="block">
               在室確認
             </Button>
           </nav>
-        </Flex>
-      </Box>
-  )
+        </Box>
+      )}
+    </Box>
+  );
 }
 
-export default StHeader
+export default StHeader;

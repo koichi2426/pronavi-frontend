@@ -29,6 +29,7 @@ const Status = () => {
   const size = useWindowSize();
   const [isPopUpVisible, setPopUpVisible] = useState(false);
 
+  {/* ポップアップメニューの開閉 */}
   const openModal = () => {
     setPopUpVisible(true);
   };
@@ -37,6 +38,7 @@ const Status = () => {
     setPopUpVisible(false);
   };
 
+  {/* 帰宅時のステータス変更 */}
   const updatejuststatus = async (statusDescription) => {
     if (user) {
       try {
@@ -65,6 +67,7 @@ const Status = () => {
     }
   };
 
+  {/* ステータスの変更 */}
   const updateStatus = async (statusDescription) => {
     if (user) {
       try {
@@ -291,9 +294,11 @@ const Status = () => {
       </div>
     );
   }
-
+  {/* 文字サイズの変更 */}
   const buttonStyle = size.width <= 425 ? { width: '80px', height: '70px' } : { width: '120px', height: '100px' };
+  const textsize = size.width <= 425 ? '38px' : '70px';
 
+  {/* ボタン表示の関数 */}
   const windowsize = (windowSize) => {
     return statusLegend.map((status, index) => (
       <Button
@@ -307,7 +312,7 @@ const Status = () => {
         border="2px solid black"
         {...buttonStyle}
       >
-        <Text fontSize="25">{status.description}</Text>
+        <Text fontSize="18">{status.description}</Text>
       </Button>
     ));
   };
@@ -315,6 +320,8 @@ const Status = () => {
   return (
     <div>
       <StHeader />
+
+      {/* ステータスの表示 */}
       <Box
         position="fixed"
         top={size.height * 0.3}
@@ -325,9 +332,10 @@ const Status = () => {
         zIndex="100"
         textAlign="center"
       >
-        <Text fontSize="20">{userName && <p>Logged in as: <strong>{userName}</strong></p>}</Text>
-        <Text fontSize="70">{userStatus !== '' && userStatus}</Text>
+        <Text fontSize={textsize}>{userStatus !== '' && userStatus}</Text>
       </Box>
+
+      {/* ボタンの表示 */}
       <Box
         position="fixed"
         top={size.height * 0.5}
@@ -346,9 +354,11 @@ const Status = () => {
           {windowsize(size)}
         </Flex>
       </Box>
+
+      {/* ポップアップメニュー */}
       <Modal isOpen={isPopUpVisible} onClose={closeModal} zIndex="1000">
         <Box p={4} textAlign="center">
-          <Text color="red" fontWeight="bold">WORNING!!</Text>
+          <Text color="red" fontWeight="bold">WARNING!!</Text>
           <p>ステータスを変更しますか？</p>
           <p>変更すると翌日の0時まで変更することができません</p>
           <Flex justify="center" mt={4}>
@@ -357,7 +367,6 @@ const Status = () => {
           </Flex>
         </Box>
       </Modal>
-
     </div>
   );
 };
