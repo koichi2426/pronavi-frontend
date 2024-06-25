@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useAuthContext } from '../context/AuthContext';
@@ -7,10 +7,46 @@ import { useAuthContext } from '../context/AuthContext';
 const Login = () => {
   const { user } = useAuthContext();
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [validUid, setValidUid] = useState(false);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const searchParams = new URLSearchParams(location.search);
+      const uid = searchParams.get('uid');
+
+      if (!uid) {
+        // uidがない場合は、ホームページなどの安全なページにリダイレクト
+        navigate('/');
+        return;
+      }
+
+      try {
+        const response = await fetch('https://www.pronavi.online/railsapp/api/v1/users/index');
+        const users = await response.json();
+        const isValidUid = users.some(user => user.User_id === uid);
+
+        if (isValidUid) {
+          setValidUid(true);
+        } else {
+          // 無効なuidの場合も、ホームページなどの安全なページにリダイレクト
+          navigate('/');
+        }
+      } catch (error) {
+        console.error('ユーザー情報の取得に失敗しました:', error);
+        // エラーの場合も、ホームページなどの安全なページにリダイレクト
+        navigate('/');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, [location.search, navigate]);
 
   useEffect(() => {
     if (user) {
@@ -34,11 +70,18 @@ const Login = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div style={styles.container}>
+        <div style={styles.spinner}></div>
+      </div>
+    );
+  }
+
   return (
     <div style={styles.container}>
       <div style={styles.logo}>ProNavi</div>
-      {error && <p style={styles.error}>{error}</p>}
-      {!user && (
+      {!user && validUid && (
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.inputGroup}>
             <label style={styles.label}>メールアドレス</label>
@@ -160,11 +203,11 @@ const styles = {
     alignItems: 'center',
   },
   spinner: {
-    border: '4px solid rgba(255, 255, 255, 0.3)',
+    border: '4px solid rgba(0, 0, 0, 0.1)',
+    borderTop: '4px solid #007bff',
     borderRadius: '50%',
-    borderTop: '4px solid #ffffff',
-    width: '20px',
-    height: '20px',
+    width: '50px',
+    height: '50px',
     animation: 'spin 1s linear infinite',
   },
 };

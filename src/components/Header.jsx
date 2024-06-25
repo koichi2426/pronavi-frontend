@@ -1,17 +1,32 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Flex, Heading, Spacer, Button, Input, Menu, MenuButton, MenuList, MenuItem, useMediaQuery } from '@yamada-ui/react';
-import { useAuthContext } from '../context/AuthContext';
+import { Box, Flex, Heading, Spacer, Button, Input, Menu, MenuButton, MenuList, MenuItem, useMediaQuery, Tooltip } from '@yamada-ui/react';
+import { useAuthContext } from '../context/AuthContext.jsx';
 
-const Header = ({ onFilterChange }) => {
+const Header = ({ onFilterChange, onSearch }) => {
   const { user } = useAuthContext();
-  const [selectedFilter, setSelectedFilter] = useState('1');
+  const [selectedFilter, setSelectedFilter] = useState('1'); //selectedFilterはプルダウン時に読み取り
   const [selectedDepartment, setSelectedDepartment] = useState('RU');
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [inputValue, setInputValue] = useState('');
 
   const handleFilterChange = (id, name) => {
     setSelectedFilter(id);
     setSelectedDepartment(name);
     onFilterChange(id);
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    const forbiddenChars = /[&<>"']/;
+
+    if (forbiddenChars.test(value)) {
+      setTooltipVisible(true);
+      setTimeout(() => setTooltipVisible(false), 2000); // Hide tooltip after 2 seconds
+    } else {
+      setInputValue(value);
+      onSearch(value);
+    }
   };
 
   const departmentMap = {
@@ -24,7 +39,7 @@ const Header = ({ onFilterChange }) => {
     '7': 'RL'
   };
 
-  const [isLargerThan600] = useMediaQuery('(min-width: 600px)');
+  const [isLargerThan600] = useMediaQuery('(min-width: 1920px)');
 
   return (
     <Box>
@@ -50,16 +65,20 @@ const Header = ({ onFilterChange }) => {
       </Box>
       <Box position="fixed" top="60px" w="100%" bg="white" p={1} zIndex="999" boxShadow="sm">
         <Flex justify={isLargerThan600 ? "space-around" : "space-between"} wrap="wrap">
-          <Input
-            placeholder="名前検索"
-            maxW={isLargerThan600 ? "300px" : "calc(100% - 130px)"}
-            mr={2}
-            variant="outline"
-            borderColor="gray.300"
-            focusBorderColor="gray.500"
-          />
+          <Tooltip label="特殊文字は入力できません" isOpen={tooltipVisible}>
+            <Input
+              placeholder="名前検索"
+              maxW={isLargerThan600 ? "400px" : "calc(100% - 130px)"}
+              mr={2}
+              variant="outline"
+              borderColor="gray.300"
+              focusBorderColor="gray.500"
+              value={inputValue}
+              onChange={handleSearchChange}
+            />
+          </Tooltip>
           <Menu>
-            <MenuButton as={Button} rightIcon="v">
+            <MenuButton as={Button} rightIcon="⇩">
               {selectedDepartment}
             </MenuButton>
             <MenuList>
