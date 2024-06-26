@@ -52,7 +52,6 @@ const Status = () => {
           body: JSON.stringify({
             schedule: {
               status_id: statusId,
-              remarks: statusText, // 備考を追加
             },
           }),
         });
@@ -66,7 +65,6 @@ const Status = () => {
       } catch (error) {
         console.error('Error updating status:', error);
       }
-      setStatusText(''); // 備考のリセット
     }
   };
 
@@ -86,7 +84,6 @@ const Status = () => {
             body: JSON.stringify({
               schedule: {
                 status_id: statusId,
-                remarks: statusText, // 備考を追加
               },
             }),
           });
@@ -101,9 +98,39 @@ const Status = () => {
       } catch (error) {
         console.error('Error updating status:', error);
       }
-      setStatusText(''); // 備考のリセット
     }
   };
+
+    {/* 備考欄の変更 */}
+    const updateremarks = async (remarksDescription) => {
+      if (user) {
+        try {
+          const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/schedules/details`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              schedule: {
+                user_id: user.uid,
+                status_details:{
+                  description: remarksDescription
+                },
+              },
+            }),
+          });
+          const result = await response.json();
+          if (result.update) {
+            console.log(`Status updated to ${remarksDescription}`);
+            setUserStatus(remarksDescription);
+          } else {
+            console.error('Failed to update remarks');
+          }
+        } catch (error) {
+          console.error('Error updating remarks:', error);
+        }
+      }
+    };
 
   const handleHomeClick = () => {
     window.location.href = '/';
@@ -344,19 +371,31 @@ const Status = () => {
         position="fixed"
         top={size.height * 0.45}
         left="50%"
-        transform="translate(-50%, -50%)"
+        transform="translate(-70%, -40%)"
         bg="white"
         p={1}
         zIndex="100"
         textAlign="center"
       >
         <Input
+          bg="white"
           type="text"
           placeholder="備考"
-          bg="white"
           value={statusText}
-          onChange={(e) => setStatusText(e.target.value)}
+          onChange={(e) => setStatusText(e.target.value) && updateremarks(e.target.value)}
         />
+        <Button
+          position="fixed"
+          border="0.5px solid gray"
+          transform={size.width}
+          bg="white"
+          p={1}
+          zIndex="100"
+          width="50%"
+          onClick={() =>setStatusText('')}
+        >
+          <Text>リセット</Text>
+        </Button>
       </Box>
 
       <Box
