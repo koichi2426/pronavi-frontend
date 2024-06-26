@@ -73,7 +73,7 @@ const Status = () => {
     if (user) {
       try {
         if (statusDescription === "帰宅") {
-          openModal(); // 研究室の場合はポップアップを表示
+          openModal(); // 帰宅の場合はポップアップを表示
         } else {
           const statusId = getStatusId(statusDescription);
           const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/${user.uid}/schedules`, {
@@ -253,6 +253,7 @@ const Status = () => {
     );
   }, []);
 
+  {/* VPNのチェック */}
   const checkVpnStatusAndLocation = (ip) => {
     fetch(`https://ipinfo.io/${ip}/json?token=${ipInfoApiKey}`)
       .then(response => response.json())
@@ -275,6 +276,7 @@ const Status = () => {
       });
   };
 
+  {/* 自動退勤システム */}
   const checkLocationAndUpdateStatus = () => {
     if (location) {
       const { latitude, longitude } = location;
@@ -320,6 +322,7 @@ const Status = () => {
     }
   };
 
+  {/* ローディング画面 */}
   if (!user) {
     return (
       <div>
@@ -329,9 +332,11 @@ const Status = () => {
     );
   }
 
+  {/* ボタンや文字のサイズ変更 */}
   const buttonStyle = size.width <= 425 ? { width: '80px', height: '70px' } : { width: '120px', height: '100px' };
   const textsize = size.width <= 425 ? '38px' : '70px';
 
+  {/* ステータスボタンの表示 */}
   const windowsize = (windowSize) => {
     return statusLegend.map((status, index) => (
       <Button
