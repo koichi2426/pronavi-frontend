@@ -7,6 +7,7 @@ import Completion from './pages/completion';
 import Status from './pages/status';
 import Registration from './pages/registration';
 import Home from './pages/home';
+import Detail from './pages/detail';
 import Header from './components/Header';
 import Mailadress from './pages/mailadress';
 import './App.css';
@@ -37,6 +38,7 @@ function Main({ selectedFilter, setSelectedFilter }) {
           <Route path="/login" element={<Login />} />
           <Route path="/completion" element={<Completion />} />
           <Route path="/mailadress" element={<Mailadress />} />
+          <Route path="/detail" element={<Detail />} />
         </Routes>
       </Box>
     </Box>
