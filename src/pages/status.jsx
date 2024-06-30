@@ -109,11 +109,9 @@ const Status = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            schedule: {
-              user_id: user.uid,
-              status_details: {
-                description: remarksDescription,
-              },
+            user_id: user.uid, // 修正: user_id を JSON のルートに移動
+            status_details: {
+              description: remarksDescription,
             },
           }),
         });
