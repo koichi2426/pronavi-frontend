@@ -13,7 +13,7 @@ const statusLegend = [
   { color: '#F48FB1', description: '学内', number: 2 },
   { color: '#FFB74D', description: '研究室', number: 3 },
   { color: '#FFF176', description: '出張', number: 4 },
-  { color: '#64B5F6', description: '帰宅', number: 5 },
+  { color: '#64B5F6', description: '学外', number: 5 },
   { color: '#B3E5FC', description: '対応不可', number: 6 },
 ];
 
@@ -70,7 +70,7 @@ const Status = () => {
   const updateStatus = async (statusDescription) => {
     if (user) {
       try {
-        if (statusDescription === "帰宅") {
+        if (statusDescription === "学外") {
           openModal();
         } else {
           const statusId = getStatusId(statusDescription);
@@ -100,6 +100,7 @@ const Status = () => {
   };
 
   const updateremarks = async (remarksDescription) => {
+    console.log("備考欄の変更成功");
     if (user) {
       try {
         const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/schedules/details`, {
