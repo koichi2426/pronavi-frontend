@@ -41,6 +41,9 @@ const StHeader = () => {
             <Button as={Link} to="/" variant="link" color="black" _hover={{ color: 'green.500' }} display="block">
               在室確認
             </Button>
+            <Button as={Link} to="/detail" variant="link" color="black" _hover={{ color: 'green.500' }} display="block">
+              使い方
+            </Button>
           </nav>
         </Box>
       )}
