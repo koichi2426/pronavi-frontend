@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
@@ -6,6 +6,7 @@ import { useAuthContext } from '../context/AuthContext';
 import StHeader from '../components/StHeader';
 import { Box, Flex, Button, Text, Modal, Input } from '@yamada-ui/react';
 import { useWindowSize } from "@uidotdev/usehooks";
+import { debounce } from 'lodash';
 
 const statusLegend = [
   { color: '#71BC78', description: '教員室', number: 1 },
@@ -30,7 +31,6 @@ const Status = () => {
   const [isPopUpVisible, setPopUpVisible] = useState(false);
   const [statusText, setStatusText] = useState('');
 
-  {/* ポップアップメニューの開閉 */}
   const openModal = () => {
     setPopUpVisible(true);
   };
@@ -39,7 +39,6 @@ const Status = () => {
     setPopUpVisible(false);
   };
 
-  {/* 帰宅時のステータス変更 */}
   const updatejuststatus = async (statusDescription) => {
     if (user) {
       try {
@@ -68,12 +67,11 @@ const Status = () => {
     }
   };
 
-  {/* ステータスの変更 */}
   const updateStatus = async (statusDescription) => {
     if (user) {
       try {
         if (statusDescription === "帰宅") {
-          openModal(); // 帰宅の場合はポップアップを表示
+          openModal();
         } else {
           const statusId = getStatusId(statusDescription);
           const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/${user.uid}/schedules`, {
@@ -101,36 +99,43 @@ const Status = () => {
     }
   };
 
-    {/* 備考欄の変更 */}
-    const updateremarks = async (remarksDescription) => {
-      if (user) {
-        try {
-          const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/schedules/details`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              schedule: {
-                user_id: user.uid,
-                status_details:{
-                  description: remarksDescription
-                },
+  const updateremarks = async (remarksDescription) => {
+    if (user) {
+      try {
+        const response = await fetch(`https://www.pronavi.online/railsapp/api/v1/users/schedules/details`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            schedule: {
+              user_id: user.uid,
+              status_details: {
+                description: remarksDescription,
               },
-            }),
-          });
-          const result = await response.json();
-          if (result.update) {
-            console.log(`Status updated to ${remarksDescription}`);
-            setUserStatus(remarksDescription);
-          } else {
-            console.error('Failed to update remarks');
-          }
-        } catch (error) {
-          console.error('Error updating remarks:', error);
+            },
+          }),
+        });
+        const result = await response.json();
+        if (result.update) {
+          console.log(`Remarks updated to ${remarksDescription}`);
+        } else {
+          console.error('Failed to update remarks');
         }
+      } catch (error) {
+        console.error('Error updating remarks:', error);
       }
-    };
+    }
+  };
+
+  const debouncedUpdateRemarks = useCallback(debounce((remarks) => {
+    updateremarks(remarks);
+  }, 30000), []);
+
+  const handleRemarksChange = (e) => {
+    setStatusText(e.target.value);
+    debouncedUpdateRemarks(e.target.value);
+  };
 
   const handleHomeClick = () => {
     window.location.href = '/';
@@ -253,7 +258,6 @@ const Status = () => {
     );
   }, []);
 
-  {/* VPNのチェック */}
   const checkVpnStatusAndLocation = (ip) => {
     fetch(`https://ipinfo.io/${ip}/json?token=${ipInfoApiKey}`)
       .then(response => response.json())
@@ -276,7 +280,6 @@ const Status = () => {
       });
   };
 
-  {/* 自動退勤システム */}
   const checkLocationAndUpdateStatus = () => {
     if (location) {
       const { latitude, longitude } = location;
@@ -322,7 +325,6 @@ const Status = () => {
     }
   };
 
-  {/* ローディング画面 */}
   if (!user) {
     return (
       <div>
@@ -332,11 +334,9 @@ const Status = () => {
     );
   }
 
-  {/* ボタンや文字のサイズ変更 */}
   const buttonStyle = size.width <= 425 ? { width: '80px', height: '70px' } : { width: '120px', height: '100px' };
   const textsize = size.width <= 425 ? '38px' : '70px';
 
-  {/* ステータスボタンの表示 */}
   const windowsize = (windowSize) => {
     return statusLegend.map((status, index) => (
       <Button
@@ -387,7 +387,7 @@ const Status = () => {
           type="text"
           placeholder="備考"
           value={statusText}
-          onChange={(e) => setStatusText(e.target.value) && updateremarks(e.target.value)}
+          onChange={handleRemarksChange}
         />
         <Button
           position="fixed"
@@ -397,7 +397,7 @@ const Status = () => {
           p={1}
           zIndex="100"
           width="50%"
-          onClick={() =>setStatusText('')}
+          onClick={() => setStatusText('')}
         >
           <Text>リセット</Text>
         </Button>
