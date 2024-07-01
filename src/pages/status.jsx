@@ -129,7 +129,7 @@ const Status = () => {
 
   const debouncedUpdateRemarks = useCallback(debounce((remarks) => {
     updateremarks(remarks);
-  }, 30000), []);
+  }, 5000), []);
 
   const handleRemarksChange = (e) => {
     setStatusText(e.target.value);
