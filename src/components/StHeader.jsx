@@ -54,14 +54,14 @@ const StHeader = () => {
             ✕
           </Button>
           <nav>
-            <Button onClick={handleLogout} as={Link} to="/" variant="link" color="black" _hover={{ color: 'green.500' }} display="block" mb={2}>
-              <Text fontSize={textsize}>ログアウト</Text>
-            </Button>
-            <Button as={Link} to="/" variant="link" color="black" _hover={{ color: 'green.500' }} display="block">
+            <Button as={Link} to="/" variant="link" color="black" _hover={{ color: 'green.500' }} display="block" p={5}>
             <Text fontSize={textsize}>在室確認</Text>
             </Button>
-            <Button as={Link} to="/detail" variant="link" color="black" _hover={{ color: 'green.500' }} display="block">
+            <Button as={Link} to="/detail" variant="link" color="black" _hover={{ color: 'green.500' }} display="block" p={5}>
             <Text fontSize={textsize}>使い方</Text>
+            </Button>
+            <Button onClick={handleLogout} as={Link} to="/" variant="link" color="black" _hover={{ color: 'green.500' }} display="block" p={5}>
+              <Text fontSize={textsize}>ログアウト</Text>
             </Button>
           </nav>
         </Box>
