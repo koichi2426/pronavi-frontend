@@ -136,7 +136,7 @@ const Home = () => {
       case 4:
         return '出張';
       case 5:
-        return '帰宅';
+        return '学外';
       case 6:
         return '対応不可';
       default:
