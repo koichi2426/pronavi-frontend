@@ -90,7 +90,7 @@ const Registration = () => {
   };
 
   const getDepartmentId = (department) => {
-    const departments = { RU: 1, RB: 2, RD: 3, RE: 4, RM: 5, RG: 6 };
+    const departments = { RU: 1, RB: 2, RD: 3, RE: 4, RM: 5, RG: 6, RL: 7 }; // RL added
     return departments[department] || null;
   };
 
@@ -183,6 +183,7 @@ const Registration = () => {
             <option value="RE">RE</option>
             <option value="RM">RM</option>
             <option value="RG">RG</option>
+            <option value="RL">RL</option> {/* RL added */}
           </select>
         </div>
         <div style={styles.inputGroup}>
