@@ -58,7 +58,7 @@ const Header = ({ onFilterChange, onSearch }) => {
               color="black"
               _hover={{ color: 'green.500' }}
             >
-              教授の方はこちら
+              教員の方はこちら
             </Button>
           </nav>
         </Flex>
@@ -91,7 +91,7 @@ const Header = ({ onFilterChange, onSearch }) => {
           </Menu>
         </Flex>
       </Box>
-      <Box mt="10px" p={4}>
+      <Box mt="30px" p={4}>
       </Box>
     </Box>
   );

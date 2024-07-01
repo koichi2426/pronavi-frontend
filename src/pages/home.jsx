@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Text, Flex, Box } from '@yamada-ui/react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { Text, Flex, Box, Portal } from '@yamada-ui/react';
 import { useAuthContext } from '../context/AuthContext';
 import Header from '../components/Header';
+import { usePopper } from 'react-popper';
 
 const UNIVERSITY_LATITUDE_RANGE = [35.981615, 35.988737];
 const UNIVERSITY_LONGITUDE_RANGE = [139.368220, 139.376497];
@@ -13,6 +14,13 @@ const Home = () => {
   const [location, setLocation] = useState(null);
   const { user } = useAuthContext();
   const ipInfoApiKey = import.meta.env.VITE_IPINFO_API_KEY; // 環境変数からAPIキーを取得
+  const [selectedProfessor, setSelectedProfessor] = useState(null); // 選択された教員を保持するための状態
+  const [popperElement, setPopperElement] = useState(null);
+  const [referenceElement, setReferenceElement] = useState(null);
+
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
+    placement: 'top',
+  });
 
   useEffect(() => {
     fetch('https://www.pronavi.online/railsapp/api/v1/users/index')
@@ -151,6 +159,25 @@ const Home = () => {
     setSearchQuery(query);
   };
 
+//教授クリック
+  const handleProfessorClick = (professor, reference) => {
+    setReferenceElement(reference);
+    setSelectedProfessor(professor.Description ? professor : null);
+  };
+//教授外クリック
+  const handleClickOutside = useCallback((event) => {
+    if (popperElement && !popperElement.contains(event.target) && referenceElement && !referenceElement.contains(event.target)) {
+      setSelectedProfessor(null);
+    }
+  }, [popperElement, referenceElement]);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [handleClickOutside]);
+
   const filteredProfessors = users.filter((user) => {
     if (searchQuery) {
       return user.User_name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -180,6 +207,9 @@ const Home = () => {
                 mr: 0,
               },
             }}
+            //教授クリック
+            onClick={(e) => handleProfessorClick(professor, e.currentTarget)}
+            cursor="pointer"
           >
             <Text width="auto" maxWidth="116px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
               {professor.User_name}
@@ -188,9 +218,18 @@ const Home = () => {
           </Box>
         ))}
       </Flex>
+      {selectedProfessor && ( //クリック条件
+        <Portal>
+          <Box ref={setPopperElement} style={styles.popper} {...attributes.popper}>
+            <Box bg="white" p={4} borderRadius="md" boxShadow="md">
+              <Text fontWeight="bold">{selectedProfessor.User_name}</Text>
+              <Text>{selectedProfessor.Description}</Text>
+            </Box>
+          </Box>
+        </Portal>
+      )}
     </>
   );
 };
 
 export default Home;
-
