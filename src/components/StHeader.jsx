@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
-import { Box, Flex, Heading, Spacer, Button, Text } from '@yamada-ui/react';
+import { Box, Flex, Heading, Spacer, Button,Text } from '@yamada-ui/react';
+import { useWindowSize } from "@uidotdev/usehooks";
 
 const StHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const size = useWindowSize();
 
   const handleLogout = async () => {
     try {
@@ -21,6 +23,8 @@ const StHeader = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const textsize = size.width <= 425 ? '38px' : '70px';
+
   return (
     <Box as="header" bg="orange.50" p={2} position="fixed" w="100%" top="0" zIndex="1000">
       <Flex align="center">
@@ -33,16 +37,31 @@ const StHeader = () => {
         </Button>
       </Flex>
       {isMenuOpen && (
-        <Box mt={2} textAlign="right">
+        <Box
+          position="fixed"
+          top="0"
+          left="0"
+          width="100%"
+          height="100%"
+          bg="rgba(211, 211, 211, 0.9)" // 薄い灰色の背景色
+          zIndex="999"
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Button onClick={toggleMenu} position="absolute" top="10px" right="10px">
+            ✕
+          </Button>
           <nav>
             <Button onClick={handleLogout} as={Link} to="/" variant="link" color="black" _hover={{ color: 'green.500' }} display="block" mb={2}>
-              ログアウト
+              <Text fontSize={textsize}>ログアウト</Text>
             </Button>
             <Button as={Link} to="/" variant="link" color="black" _hover={{ color: 'green.500' }} display="block">
-              在室確認
+            <Text fontSize={textsize}>在室確認</Text>
             </Button>
             <Button as={Link} to="/detail" variant="link" color="black" _hover={{ color: 'green.500' }} display="block">
-              使い方
+            <Text fontSize={textsize}>使い方</Text>
             </Button>
           </nav>
         </Box>
