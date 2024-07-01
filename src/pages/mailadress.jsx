@@ -39,7 +39,7 @@ const Mailadress = () => {
       const user = users.find(user => user.Mailaddress === email);
       if (user) {
         const loginUrl = `https://www.pronavi.online/login?uid=${user.User_id}`;
-        const message = `以下はログイン用URLです。\n${loginUrl}`;
+        const message = `以下はログイン用URLです。\n${loginUrl}\n\nより使いやすくしてもらうために、教員用スマートフォンのホーム画面にこちらのURLのショートカットを追加することをお勧めします。詳しくは今日引用ページの「使い方」で確認ください。`;
 
         emailjs.send(
           import.meta.env.VITE_EMAILJS_SERVICE_ID,
