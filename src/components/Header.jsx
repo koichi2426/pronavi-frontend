@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Flex, Heading, Spacer, Button, Input, Menu, MenuButton, MenuList, MenuItem, useMediaQuery, Tooltip } from '@yamada-ui/react';
 import { useAuthContext } from '../context/AuthContext.jsx';
+import customIcon from '../assets/custom-icon.svg'; // SVGファイルをインポート
 
 const Header = ({ onFilterChange, onSearch }) => {
   const { user } = useAuthContext();
@@ -78,7 +79,7 @@ const Header = ({ onFilterChange, onSearch }) => {
             />
           </Tooltip>
           <Menu>
-            <MenuButton as={Button} rightIcon="⇩">
+            <MenuButton as={Button} rightIcon={<img src={customIcon} alt="custom icon" width="10px" height="10px" />}>
               {selectedDepartment}
             </MenuButton>
             <MenuList>
