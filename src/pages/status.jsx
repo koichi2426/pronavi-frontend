@@ -425,7 +425,7 @@ const Status = () => {
         <Box p={4} textAlign="center">
           <Text color="red" fontWeight="bold">WARNING!!</Text>
           <p>ステータスを変更しますか？</p>
-          <p>変更すると翌日の0時まで変更することができません</p>
+          <p>自動出勤機能が他ステータスに変更されるまでロックされます。</p>
           <Flex justify="center" mt={4}>
             <Button onClick={closeModal} mr={35}>NO</Button>
             <Button onClick={() => { updatejuststatus('帰宅'); closeModal(); }} ml={2}>YES</Button>
