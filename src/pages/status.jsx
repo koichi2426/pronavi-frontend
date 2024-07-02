@@ -8,6 +8,7 @@ import { Box, Flex, Button, Text, Modal, Input } from '@yamada-ui/react';
 import { useWindowSize } from "@uidotdev/usehooks";
 import { debounce } from 'lodash';
 
+
 const statusLegend = [
   { color: '#71BC78', description: '教員室', number: 1 },
   { color: '#F48FB1', description: '学内', number: 2 },
@@ -133,12 +134,12 @@ const Status = () => {
 
   const handleRemarksChange = (e) => {
     setStatusText(e.target.value);
-    debouncedUpdateRemarks(e.target.value);
   };
-
-  const handleHomeClick = () => {
-    window.location.href = '/';
+  
+  const handleRemarksSubmit = () => {
+    updateremarks(statusText);
   };
+  
 
   const getStatusDescription = (statusId) => {
     const status = statusLegend.find(s => s.number === statusId);
@@ -380,6 +381,7 @@ const Status = () => {
         p={1}
         zIndex="100"
         textAlign="center"
+        display="inline-block"
       >
         <Input
           bg="white"
@@ -396,9 +398,9 @@ const Status = () => {
           p={1}
           zIndex="100"
           width="50%"
-          onClick={() => setStatusText('')}
+          onClick={handleRemarksSubmit}
         >
-          <Text>リセット</Text>
+          <Text>送信</Text>
         </Button>
       </Box>
 
