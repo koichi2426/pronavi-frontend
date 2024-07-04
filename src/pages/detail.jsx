@@ -1,10 +1,13 @@
 import React from 'react';
 import { Box, Text, Image } from '@yamada-ui/react';
 import MailHeader from '../components/MailHeader';
-import des1Image from '../assets/material/des1.png'; 
-import des2Image from '../assets/material/des2.png'; 
-import des3Image from '../assets/material/des3.png'; 
+import des1Image from '../assets/material/logout.png'; 
+import des2Image from '../assets/material/sendmailaddress.png'; 
+import des3Image from '../assets/material/login.png'; 
+import des4Image from '../assets/material/addHome.png'; 
+import des5Image from '../assets/material/editname.png'; 
 import '../Detail.css';
+
 const Detail = () => {
   return (
     <div>
@@ -17,34 +20,54 @@ const Detail = () => {
         <hr className="gray-line" />
         <Box mt={4}>
           <Text className="text-xl-custom">ホーム画面に追加する。</Text>
-          <Text className="text-2xl-custom">1.フッター中央にある📤を押します。</Text>
+          <Text className="text-2xl-custom">1.画面右上のメニューから、「ログアウト」を選択します。</Text>
           <Image 
             src={des1Image} 
             alt="description1"
-            maxWidth="300px"
-            height="auto" 
+            className="responsive-image"
             borderRadius="20px"
             mt={4}
           />
         </Box>
         <Box mt={4}>
-          <Text className="text-2xl-custom">2.下にスクロールし、「ホーム画面に追加」を選択します。</Text>
+          <Text className="text-2xl-custom">2.「教員の方はこちら」から、登録したメールアドレスを入力し、「送信」を押します。</Text>
           <Image 
             src={des2Image} 
             alt="description2"
-            maxWidth="300px" 
-            height="auto" 
+            className="responsive-image"
             borderRadius="20px" 
             mt={4}
           />
         </Box>
         <Box mt={4}>
-          <Text className="text-2xl-custom">3.画面右上の「追加」を選択します。これによりホーム画面に追加されます。</Text>
+          <Text className="text-2xl-custom">3.ログイン用URLが記載されたメールから、URLを開き、フッター中央にある📤を押します。</Text>
           <Image 
             src={des3Image} 
             alt="description3"
-            maxWidth="300px"
-            height="auto"
+            className="responsive-image"
+            borderRadius="20px"
+            mt={4}
+          />
+        </Box>
+        <Box mt={4}>
+          <Text className="text-2xl-custom">4.下にスクロールし、「ホーム画面に追加」を選択します。</Text>
+          <Image 
+            src={des4Image} 
+            alt="description4"
+            className="responsive-image"
+            borderRadius="20px"
+            mt={4}
+          />
+        </Box>
+        <Box mt={4}>
+          <Text className="text-2xl-custom">
+            5.名前を変更し「追加」を押します。
+            これで、ホーム画面に追加されます。
+          </Text>
+          <Image 
+            src={des5Image} 
+            alt="description5"
+            className="responsive-image"
             borderRadius="20px"
             mt={4}
           />
