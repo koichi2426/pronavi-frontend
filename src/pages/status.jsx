@@ -430,7 +430,7 @@ const Status = () => {
           <p>自動出勤機能が他ステータスに変更されるまでロックされます。</p>
           <Flex justify="center" mt={4}>
             <Button onClick={closeModal} mr={35}>NO</Button>
-            <Button onClick={() => { updatejuststatus('帰宅'); closeModal(); }} ml={2}>YES</Button>
+            <Button onClick={() => { updatejuststatus('学外'); closeModal(); }} ml={2}>YES</Button>
           </Flex>
         </Box>
       </Modal>
