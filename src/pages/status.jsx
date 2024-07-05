@@ -394,12 +394,16 @@ const Status = () => {
           />
           {
             <InputRightElement pointerEvents="auto">
-              <Button
-                bg="transparent"
-                zIndex="100"
-                _hover={{ color: 'gray.20' }}
-                onClick={() => {setStatusText(''); console.log("成功");}}
-              >
+  <Button
+    bg="transparent"
+    zIndex="100"
+    _hover={{ color: 'gray.20' }}
+    onClick={(event) => {
+      event.stopPropagation();  // これによりイベントが親ノードに伝播するのを防ぐ
+      setStatusText('');
+      console.log("クリア成功");
+    }}
+  >
                 ×
               </Button>
             </InputRightElement>
