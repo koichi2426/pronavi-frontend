@@ -4,7 +4,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useAuthContext } from '../context/AuthContext';
 import StHeader from '../components/StHeader';
-import { Box, Flex, Button, Text, Modal, Input } from '@yamada-ui/react';
+import { Box, Flex, Button, Text, Modal, Input, InputGroup, InputRightElement } from '@yamada-ui/react';
 import { useWindowSize } from "@uidotdev/usehooks";
 import { debounce } from 'lodash';
 
@@ -134,6 +134,7 @@ const Status = () => {
 
   const handleRemarksChange = (e) => {
     setStatusText(e.target.value);
+    console.log("statusTextの成功");
   };
   
   const handleRemarksSubmit = () => {
@@ -358,7 +359,6 @@ const Status = () => {
   return (
     <div>
       <StHeader />
-
       <Box
         position="fixed"
         top={size.height * 0.3}
@@ -372,37 +372,53 @@ const Status = () => {
         <Text fontSize={textsize}>{userStatus !== '' && userStatus}</Text>
       </Box>
 
-      <Box
-        position="fixed"
-        top={size.height * 0.45}
-        left="50%"
-        transform="translate(-70%, -40%)"
-        bg="white"
-        p={1}
-        zIndex="100"
-        textAlign="center"
-        display="inline-block"
-      >
-        <Input
-          bg="white"
-          type="text"
-          placeholder="備考"
-          value={statusText}
-          onChange={handleRemarksChange}
-        />
-        <Button
+      <InputGroup>
+        <Box
           position="fixed"
-          border="0.5px solid gray"
-          transform={size.width}
+          top={size.height * 0.45}
+          left="50%"
+          transform="translate(-70%, -40%)"
           bg="white"
           p={1}
           zIndex="100"
-          width="50%"
-          onClick={handleRemarksSubmit}
+          textAlign="center"
+          display="inline-block"
         >
-          <Text>送信</Text>
-        </Button>
-      </Box>
+          <Input
+            bg="white"
+            type="text"
+            zIndex="1000"
+            placeholder="備考"
+            value={statusText}
+            onChange={handleRemarksChange}
+          />
+          {
+            <InputRightElement pointerEvents="auto">
+              <Button
+                bg="transparent"
+                zIndex="100"
+                _hover={{ color: 'gray.20' }}
+                onClick={() => {setStatusText(''); console.log("成功");}}
+              >
+                ×
+              </Button>
+            </InputRightElement>
+          }
+          <Button
+            ml={4}
+            position="fixed"
+            border="0.5px solid gray"
+            transform={size.width}
+            bg="white"
+            p={1}
+            zIndex="100"
+            width="50%"
+            onClick={handleRemarksSubmit}
+          >
+            <Text>送信</Text>
+          </Button>
+        </Box>
+      </InputGroup>
 
       <Box
         position="fixed"
