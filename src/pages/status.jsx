@@ -360,20 +360,23 @@ const Status = () => {
       </Box>
 
       <InputGroup>
-        <Box
-          position="fixed"
-          top={size.height * 0.45}
-          left="50%"
-          transform="translate(-70%, -40%)"
-          bg="white"
-          p={1}
-          zIndex="100"
-          textAlign="center"
-          display="inline-block"
-        >
-
-          <InputWithClear className = "inputWithclear" user={user} updateremarks={updateremarks} initialDescription={userDescription} placeholderText={"備考欄"}/>
-        </Box>
+      <Box
+      position="fixed"
+      top={size.height * 0.45}
+      width="100%" // Ensure the Box spans the full width
+      display="flex" // Use flexbox for centering
+      justifyContent="center" // Center the content horizontally
+      padding="0px" // Add padding for more space around the Box
+      >
+        <div className="inputWithclear">
+          <InputWithClear
+          user={user}
+          updateremarks={updateremarks}
+          initialDescription={userDescription}
+          placeholderText={"備考欄"}
+          />
+        </div>
+      </Box>
       </InputGroup>
 
       <Box

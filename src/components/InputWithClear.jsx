@@ -42,7 +42,7 @@ const InputWithClear = ({ user, updateremarks, initialDescription, placeholderTe
         </button>
       )}
       <button style={styles.submitButton} onClick={handleSubmit}>
-        送信
+        更新
       </button>
     </div>
   );
