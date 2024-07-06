@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const InputWithClear = ({ user, updateremarks, initialDescription }) => {
+const InputWithClear = ({ user, updateremarks, initialDescription, placeholderText }) => {
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
@@ -13,14 +13,18 @@ const InputWithClear = ({ user, updateremarks, initialDescription }) => {
 
   const handleClear = async () => {
     setInputValue('');
-    await updateremarks(''); // Clear button press sends an empty string
+    await handleUpdateRemarks(''); // Clear button press sends an empty string
   };
 
   const handleSubmit = async () => {
     if (inputValue) {
-      await updateremarks(inputValue);
-      setInputValue(''); // Clear input after submission
+      await handleUpdateRemarks(inputValue);
     }
+  };
+
+  const handleUpdateRemarks = async (value) => {
+    await updateremarks(value);
+    alert('備考欄が更新されました'); // Display alert when remarks are updated
   };
 
   return (
@@ -29,7 +33,7 @@ const InputWithClear = ({ user, updateremarks, initialDescription }) => {
         type="text"
         value={inputValue}
         onChange={handleChange}
-        placeholder="Enter text..."
+        placeholder={placeholderText} // Placeholder text
         style={styles.input}
       />
       {inputValue && (

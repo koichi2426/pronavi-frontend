@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
-import { auth } from '../firebase';
 import { useAuthContext } from '../context/AuthContext';
 import StHeader from '../components/StHeader';
 import InputWithClear from '../components/InputWithClear';
@@ -373,7 +371,8 @@ const Status = () => {
           textAlign="center"
           display="inline-block"
         >
-          <InputWithClear user={user} updateremarks={updateremarks} initialDescription={userDescription} />
+
+          <InputWithClear className = "inputWithclear" user={user} updateremarks={updateremarks} initialDescription={userDescription} placeholderText={"備考欄"}/>
         </Box>
       </InputGroup>
 
