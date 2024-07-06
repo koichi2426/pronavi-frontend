@@ -11,8 +11,9 @@ const InputWithClear = ({ user, updateremarks, initialDescription }) => {
     setInputValue(event.target.value);
   };
 
-  const handleClear = () => {
+  const handleClear = async () => {
     setInputValue('');
+    await updateremarks(''); // Clear button press sends an empty string
   };
 
   const handleSubmit = async () => {
