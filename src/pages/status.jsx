@@ -4,6 +4,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useAuthContext } from '../context/AuthContext';
 import StHeader from '../components/StHeader';
+import InputWithClear from '../components/InputWithClear';
 import { Box, Flex, Button, Text, Modal, Input, InputGroup, InputRightElement } from '@yamada-ui/react';
 import { useWindowSize } from "@uidotdev/usehooks";
 import { debounce } from 'lodash';
@@ -136,12 +137,6 @@ const Status = () => {
     setStatusText(e.target.value);
     console.log("statusTextの成功");
   };
-  
-  const handleRemarksSubmit = () => {
-    updateremarks(statusText);
-  };
-  
-
   const getStatusDescription = (statusId) => {
     const status = statusLegend.find(s => s.number === statusId);
     return status ? status.description : 'Unknown';
@@ -384,43 +379,7 @@ const Status = () => {
           textAlign="center"
           display="inline-block"
         >
-          <Input
-            bg="white"
-            type="text"
-            zIndex="1000"
-            placeholder="備考"
-            value={statusText}
-            onChange={handleRemarksChange}
-          />
-          {
-            <InputRightElement pointerEvents="auto">
-  <Button
-    bg="transparent"
-    zIndex="100"
-    _hover={{ color: 'gray.20' }}
-    onClick={(event) => {
-      event.stopPropagation();  // これによりイベントが親ノードに伝播するのを防ぐ
-      setStatusText('');
-      console.log("クリア成功");
-    }}
-  >
-                ×
-              </Button>
-            </InputRightElement>
-          }
-          <Button
-            ml={4}
-            position="fixed"
-            border="0.5px solid gray"
-            transform={size.width}
-            bg="white"
-            p={1}
-            zIndex="100"
-            width="50%"
-            onClick={handleRemarksSubmit}
-          >
-            <Text>送信</Text>
-          </Button>
+          <InputWithClear user={user} updateremarks={updateremarks} />
         </Box>
       </InputGroup>
 
