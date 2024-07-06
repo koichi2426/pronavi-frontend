@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
-import { auth } from '../firebase';
 import { useAuthContext } from '../context/AuthContext';
 import StHeader from '../components/StHeader';
-import { Box, Flex, Button, Text, Modal, Input } from '@yamada-ui/react';
+import InputWithClear from '../components/InputWithClear';
+import { Box, Flex, Button, Text, Modal, Input, InputGroup, InputRightElement } from '@yamada-ui/react';
 import { useWindowSize } from "@uidotdev/usehooks";
 import { debounce } from 'lodash';
 
@@ -31,6 +30,7 @@ const Status = () => {
   const size = useWindowSize();
   const [isPopUpVisible, setPopUpVisible] = useState(false);
   const [statusText, setStatusText] = useState('');
+  const [userDescription, setUserDescription] = useState('');
 
   const openModal = () => {
     setPopUpVisible(true);
@@ -134,13 +134,8 @@ const Status = () => {
 
   const handleRemarksChange = (e) => {
     setStatusText(e.target.value);
+    console.log("statusTextの成功");
   };
-  
-  const handleRemarksSubmit = () => {
-    updateremarks(statusText);
-  };
-  
-
   const getStatusDescription = (statusId) => {
     const status = statusLegend.find(s => s.number === statusId);
     return status ? status.description : 'Unknown';
@@ -184,6 +179,8 @@ const Status = () => {
       if (currentUser) {
         setUserName(currentUser.User_name);
         setUserStatus(getStatusDescription(currentUser.Status_id));
+        console.log(currentUser.Description);
+        setUserDescription(currentUser.Description); // 備考欄の内容を設定
       } else {
         setUserName('none');
         setUserStatus('none');
@@ -192,15 +189,6 @@ const Status = () => {
       console.error('Error fetching user data:', error);
       setUserName('none');
       setUserStatus('none');
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      navigate('/');
-    } catch (error) {
-      console.error('Error signing out:', error);
     }
   };
 
@@ -358,7 +346,6 @@ const Status = () => {
   return (
     <div>
       <StHeader />
-
       <Box
         position="fixed"
         top={size.height * 0.3}
@@ -372,37 +359,25 @@ const Status = () => {
         <Text fontSize={textsize}>{userStatus !== '' && userStatus}</Text>
       </Box>
 
+      <InputGroup>
       <Box
-        position="fixed"
-        top={size.height * 0.45}
-        left="50%"
-        transform="translate(-70%, -40%)"
-        bg="white"
-        p={1}
-        zIndex="100"
-        textAlign="center"
-        display="inline-block"
+      position="fixed"
+      top={size.height * 0.45}
+      width="100%" // Ensure the Box spans the full width
+      display="flex" // Use flexbox for centering
+      justifyContent="center" // Center the content horizontally
+      padding="0px" // Add padding for more space around the Box
       >
-        <Input
-          bg="white"
-          type="text"
-          placeholder="備考"
-          value={statusText}
-          onChange={handleRemarksChange}
-        />
-        <Button
-          position="fixed"
-          border="0.5px solid gray"
-          transform={size.width}
-          bg="white"
-          p={1}
-          zIndex="100"
-          width="50%"
-          onClick={handleRemarksSubmit}
-        >
-          <Text>送信</Text>
-        </Button>
+        <div className="inputWithclear">
+          <InputWithClear
+          user={user}
+          updateremarks={updateremarks}
+          initialDescription={userDescription}
+          placeholderText={"備考欄"}
+          />
+        </div>
       </Box>
+      </InputGroup>
 
       <Box
         position="fixed"
