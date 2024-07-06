@@ -32,6 +32,7 @@ const Status = () => {
   const size = useWindowSize();
   const [isPopUpVisible, setPopUpVisible] = useState(false);
   const [statusText, setStatusText] = useState('');
+  const [userDescription, setUserDescription] = useState('');
 
   const openModal = () => {
     setPopUpVisible(true);
@@ -180,6 +181,8 @@ const Status = () => {
       if (currentUser) {
         setUserName(currentUser.User_name);
         setUserStatus(getStatusDescription(currentUser.Status_id));
+        console.log(currentUser.Description);
+        setUserDescription(currentUser.Description); // 備考欄の内容を設定
       } else {
         setUserName('none');
         setUserStatus('none');
@@ -188,15 +191,6 @@ const Status = () => {
       console.error('Error fetching user data:', error);
       setUserName('none');
       setUserStatus('none');
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      navigate('/');
-    } catch (error) {
-      console.error('Error signing out:', error);
     }
   };
 
@@ -379,7 +373,7 @@ const Status = () => {
           textAlign="center"
           display="inline-block"
         >
-          <InputWithClear user={user} updateremarks={updateremarks} />
+          <InputWithClear user={user} updateremarks={updateremarks} initialDescription={userDescription} />
         </Box>
       </InputGroup>
 

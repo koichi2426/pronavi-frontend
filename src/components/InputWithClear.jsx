@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const InputWithClear = ({ user, updateremarks }) => {
+const InputWithClear = ({ user, updateremarks, initialDescription }) => {
   const [inputValue, setInputValue] = useState('');
+
+  useEffect(() => {
+    setInputValue(initialDescription);
+  }, [initialDescription]);
 
   const handleChange = (event) => {
     setInputValue(event.target.value);
