@@ -53,6 +53,7 @@ const Header = ({ onFilterChange, onSearch }) => {
   };
 
   const [isLargerThan600] = useMediaQuery('(min-width: 1920px)');
+  const [isMobile] = useMediaQuery('(max-width: 600px)');
 
   return (
     <Box>
@@ -62,7 +63,6 @@ const Header = ({ onFilterChange, onSearch }) => {
             Pronavi
           </Heading>
           <Spacer />
-          
           <nav>
             <Button
               as={Link}
@@ -70,6 +70,7 @@ const Header = ({ onFilterChange, onSearch }) => {
               variant="link"
               color="black"
               _hover={{ color: 'green.500' }}
+              fontSize="sm"
             >
               教員の方はこちら
             </Button>
@@ -80,8 +81,8 @@ const Header = ({ onFilterChange, onSearch }) => {
         <Flex justify={isLargerThan600 ? "space-around" : "space-between"} wrap="wrap">
           <Tooltip label="特殊文字は入力できません" isOpen={tooltipVisible}>
             <Input
-              placeholder="名前検索"
-              maxW={isLargerThan600 ? "400px" : "calc(100% - 130px)"}
+              placeholder="全学系検索"
+              maxW={isLargerThan600 ? "400px" : "calc(100% - 110px)"}
               mr={2}
               variant="outline"
               borderColor="gray.300"
@@ -90,18 +91,20 @@ const Header = ({ onFilterChange, onSearch }) => {
               onChange={handleSearchChange}
             />
           </Tooltip>
-          <Menu>
-            <MenuButton as={Button} rightIcon={<img src={customIcon} alt="custom icon" width="10px" height="10px" />}>
-              {selectedDepartment}
-            </MenuButton>
-            <MenuList>
-              {Object.entries(departmentMap).map(([id, name]) => (
-                <MenuItem key={id} onClick={() => handleFilterChange(id, name)}>
-                  {name}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
+          {!inputValue && ( // inputValueが空でない場合にプルダウンメニューを非表示
+            <Menu>
+              <MenuButton as={Button} rightIcon={<img src={customIcon} alt="custom icon" width="10px" height="10px" />}>
+                {selectedDepartment}
+              </MenuButton>
+              <MenuList>
+                {Object.entries(departmentMap).map(([id, name]) => (
+                  <MenuItem key={id} onClick={() => handleFilterChange(id, name)}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+          )}
         </Flex>
       </Box>
       <Box mt="30px" p={4}>

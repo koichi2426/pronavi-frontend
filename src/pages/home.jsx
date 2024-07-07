@@ -159,12 +159,13 @@ const Home = () => {
     setSearchQuery(query);
   };
 
-//教授クリック
+  //教授クリック
   const handleProfessorClick = (professor, reference) => {
     setReferenceElement(reference);
-    setSelectedProfessor(professor.Description ? professor : null);
+    setSelectedProfessor(professor);
   };
-//教授外クリック
+
+  //教授外クリック
   const handleClickOutside = useCallback((event) => {
     if (popperElement && !popperElement.contains(event.target) && referenceElement && !referenceElement.contains(event.target)) {
       setSelectedProfessor(null);
@@ -184,6 +185,16 @@ const Home = () => {
     }
     return user.Department_id.toString() === selectedFilter;
   });
+
+  const departmentMap = {
+    '1': 'RU',
+    '2': 'RB',
+    '3': 'RD',
+    '4': 'RE',
+    '5': 'RM',
+    '6': 'RG',
+    '7': 'RL'
+  };
 
   return (
     <>
@@ -220,10 +231,12 @@ const Home = () => {
       </Flex>
       {selectedProfessor && ( //クリック条件
         <Portal>
-          <Box ref={setPopperElement} style={styles.popper} {...attributes.popper}>
+          <Box ref={setPopperElement} style={{ ...styles.popper, zIndex: 9999 }} {...attributes.popper}>
             <Box bg="white" p={4} borderRadius="md" boxShadow="md">
-              <Text fontWeight="bold">{selectedProfessor.User_name}</Text>
-              <Text>{selectedProfessor.Description}</Text>
+              <Text fontWeight="bold">{`学系: ${departmentMap[selectedProfessor.Department_id]}`}</Text>
+              {selectedProfessor.Description && (
+                <Text mt={2}>{selectedProfessor.Description}</Text>
+              )}
             </Box>
           </Box>
         </Portal>
