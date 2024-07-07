@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Flex, Heading, Spacer, Button, Input, Menu, MenuButton, MenuList, MenuItem, useMediaQuery, Tooltip } from '@yamada-ui/react';
 import { useAuthContext } from '../context/AuthContext.jsx';
@@ -11,10 +11,22 @@ const Header = ({ onFilterChange, onSearch }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
+  useEffect(() => {
+    const savedFilter = localStorage.getItem('selectedFilter');
+    const savedDepartment = localStorage.getItem('selectedDepartment');
+    if (savedFilter && savedDepartment) {
+      setSelectedFilter(savedFilter);
+      setSelectedDepartment(savedDepartment);
+      onFilterChange(savedFilter);
+    }
+  }, [onFilterChange]);
+
   const handleFilterChange = (id, name) => {
     setSelectedFilter(id);
     setSelectedDepartment(name);
     onFilterChange(id);
+    localStorage.setItem('selectedFilter', id);
+    localStorage.setItem('selectedDepartment', name);
   };
 
   const handleSearchChange = (e) => {
