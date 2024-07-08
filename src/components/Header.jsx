@@ -64,6 +64,9 @@ const Header = ({ onFilterChange, onSearch }) => {
           <Heading as="h3" size="lg">
             Pronavi
           </Heading>
+          <Heading as="h3" size="sm" ml={3} p={2}>
+            在室確認システム
+          </Heading>
           <Spacer />
           <nav>
             <Button
