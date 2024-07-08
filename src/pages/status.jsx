@@ -362,7 +362,7 @@ const Status = () => {
       <InputGroup>
       <Box
       position="fixed"
-      top={size.height * 0.45}
+      top={size.height * 0.4}
       width="100%" // Ensure the Box spans the full width
       display="flex" // Use flexbox for centering
       justifyContent="center" // Center the content horizontally

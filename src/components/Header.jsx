@@ -33,11 +33,11 @@ const Header = ({ onFilterChange, onSearch }) => {
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
-    const forbiddenChars = /[&<>"'/*]/;
+    const forbiddenChars = /[&<>"'/*_% \\ -]/;
 
     if (forbiddenChars.test(value)) {
       setTooltipVisible(true);
-      setTimeout(() => setTooltipVisible(false), 2000); // Hide tooltip after 2 seconds
+      setTimeout(() => setTooltipVisible(false), 1500); // 表記の時間
     } else {
       setInputValue(value);
       onSearch(value);
@@ -110,7 +110,7 @@ const Header = ({ onFilterChange, onSearch }) => {
           </Menu>
         </Flex>
       </Box>
-      <Box mt="30px" p={4}>
+      <Box mt="1px" p={3}>
       </Box>
     </Box>
   );
