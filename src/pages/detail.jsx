@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Text, Image } from '@yamada-ui/react';
-import MailHeader from '../components/MailHeader';
+import DetailHeader from '../components/DetailHeader';
 import des1Image from '../assets/material/des1.png'; 
 import des2Image from '../assets/material/des2.png'; 
 import des3Image from '../assets/material/des3.png'; 
@@ -8,7 +8,7 @@ import '../Detail.css';
 const Detail = () => {
   return (
     <div>
-      <MailHeader />
+      <DetailHeader />
       <Box p={4} mt="50px">
         <Box mt={4}>
           <Text className="text-lg-custom">アプリを利用する前に。</Text>
