@@ -64,7 +64,16 @@ const Header = ({ onFilterChange, onSearch }) => {
           <Heading as="h3" size="lg">
             Pronavi
           </Heading>
-          <Heading as="h3" size="sm" ml={3} p={2}>
+          <Heading
+            as="h3"
+            size={isMobile ? "xs" : "sm"}
+            ml={1}
+            fontSize={isMobile ? "12px" : "md"} 
+            color="gray.700"
+            style={{
+              transform: 'translateY(5px)'
+            }}
+          >
             在室確認システム
           </Heading>
           <Spacer />
